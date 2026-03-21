@@ -14,10 +14,14 @@
         .pulse-glow { animation: pulse-glow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
         @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(34,197,94,0.5); } 50% { box-shadow: 0 0 40px rgba(34,197,94,0.8); } }
         .btn { transition: all 0.3s ease; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34,197,94,0.4); }
-    </style>
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34,197,94,0.4); }        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
+        .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
+        @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }    </style>
 </head>
 <body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+    
     <div class="glass-card text-center">
         <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center pulse-glow">
             <i data-lucide="key" class="w-10 h-10 text-white"></i>
@@ -27,12 +31,12 @@
 
         <p class="text-lg text-gray-300 mb-8">
             Chào mừng bạn đến với Moon Light Hub!<br>
-            Để nhận key miễn phí, hãy hoàn thành nhiệm vụ link4sub trước.
+            Để nhận key miễn phí, hãy hoàn thành nhiệm vụ link4m trước.
         </p>
 
-        <a id="start-link4sub" href="#" class="inline-block px-10 py-5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl btn shadow-xl shadow-green-500/40">
+        <a id="start-link4m" href="#" class="inline-block px-10 py-5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl btn shadow-xl shadow-green-500/40">
             <i data-lucide="external-link" class="w-6 h-6 inline mr-2"></i>
-            Bắt đầu nhiệm vụ Link4Sub
+            Bắt đầu nhiệm vụ Link4M
         </a>
 
         <p class="text-sm text-gray-500 mt-8">
@@ -52,13 +56,30 @@
             return token;
         }
 
-        document.getElementById('start-link4sub').addEventListener('click', (e) => {
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const count = 50; // Reduced from 100 for better performance
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        document.getElementById('start-link4m').addEventListener('click', (e) => {
             e.preventDefault();
+            localStorage.setItem('visited_getkey', 'true');
             const token = generateRandomToken();
-            localStorage.setItem('link4sub_token', token);
+            localStorage.setItem('link4m_token', token);
             const redirectUrl = `${window.location.origin}/getkey2.html?token=${encodeURIComponent(token)}`;
-            const link4subUrl = `https://example.com/link4sub?redirect=${encodeURIComponent(redirectUrl)}`;
-            window.location.href = link4subUrl;
+            const link4mUrl = `https://link4m.net/JpXEzag?redirect=${encodeURIComponent(redirectUrl)}`;
+            window.location.href = link4mUrl;
         });
     </script>
 </body>

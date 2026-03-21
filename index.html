@@ -167,6 +167,16 @@
         .hidden-script {
             display: none !important;
         }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body class="text-white overflow-x-hidden relative min-h-screen">
@@ -1013,39 +1023,117 @@ end)</code></pre>
         }
 
         // Copy code function
-        function copyCode(elementId) {
+        function copyCode(elementId, scriptName = 'Code') {
             const codeElement = document.getElementById(elementId);
+            if (!codeElement) {
+                showToast('Lỗi: Không tìm thấy code', 'error');
+                return;
+            }
+            
             const codeText = codeElement.innerText;
             
             navigator.clipboard.writeText(codeText).then(() => {
-                // Show notification
-                const notifId = 'notif-' + elementId.replace('code', '');
-                const notif = document.getElementById(notifId);
-                
-                if (notif) {
-                    notif.style.opacity = '1';
-                    notif.style.transform = 'translateY(0)';
-                    
-                    setTimeout(() => {
-                        notif.style.opacity = '0';
-                        notif.style.transform = 'translateY(-10px)';
-                    }, 2000);
-                }
-                
-                // Also show alert for mobile
+                showToast('✓ ' + scriptName + ' đã copy!', 'success');
                 console.log('Code copied: ' + elementId);
             }).catch(err => {
                 console.error('Failed to copy:', err);
                 // Fallback for older browsers
-                const textArea = document.createElement("textarea");
-                textArea.value = codeText;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textArea);
-                
-                alert('Đã copy code vào clipboard!');
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = codeText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textArea);
+                    showToast('✓ ' + scriptName + ' đã copy!', 'success');
+                } catch (e) {
+                    showToast('Lỗi khi copy code', 'error');
+                }
             });
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast show toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon toast-${type}">
+                    ${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}
+                </div>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Filter scripts function
+        function filterScripts(category) {
+            const scripts = document.querySelectorAll('[data-category]');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            filterBtns.forEach(btn => {
+                if (btn.getAttribute('data-filter') === category) {
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-white/5', 'text-gray-400', 'border-white/10');
+                    btn.classList.add('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/30');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('bg-white/5', 'text-gray-400', 'border-white/10');
+                    btn.classList.remove('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/30');
+                }
+            });
+            
+            // Filter scripts
+            let visibleCount = 0;
+            scripts.forEach(script => {
+                if (category === 'all' || script.getAttribute('data-category') === category) {
+                    script.classList.remove('hidden-script');
+                    script.style.animation = 'fadeIn 0.3s ease-in-out';
+                    visibleCount++;
+                } else {
+                    script.classList.add('hidden-script');
+                }
+            });
+            
+            // Update count
+            document.getElementById('script-count').innerText = `Hiển thị ${visibleCount} script`;
+        }
+
+        // Toggle FAQ accordion
+        function toggleFaq(element) {
+            const parent = element.parentElement;
+            const answer = parent.querySelector('.faq-answer');
+            const icon = element.querySelector('.faq-icon');
+            
+            // Close other open FAQs
+            document.querySelectorAll('.faq-answer.active').forEach(openAnswer => {
+                if (openAnswer !== answer) {
+                    openAnswer.classList.remove('active');
+                    openAnswer.previousElementSibling?.querySelector('.faq-icon')?.classList.remove('rotate');
+                }
+            });
+            
+            // Toggle current FAQ
+            if (answer) {
+                answer.classList.toggle('active');
+            }
+            if (icon) {
+                icon.classList.toggle('rotate');
+            }
         }
 
         // Smooth scroll for navigation links
