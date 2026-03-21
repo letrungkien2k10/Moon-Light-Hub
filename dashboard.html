@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Moon Light Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(140deg, #070b1b 0%, #0f1731 40%, #131b31 100%); color:#e6e6ff; }
+    .card { background: rgba(20,32,66,.72); border: 1px solid rgba(100,139,255,.24); backdrop-filter: blur(10px); border-radius: 16px; }
+    .glass { box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+    .dot { height: 10px; width: 10px; border-radius: 999px; display: inline-block; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen p-4 sm:p-6 lg:p-8">
+    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">ZM Rejoin Manager</h1>
+        <p class="text-xs text-slate-300 mt-1">Dashboard quản lý key & package</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs uppercase bg-slate-700/50 px-3 py-1 rounded-full">ADMIN</span>
+        <button id="dashboard-btn" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white">Dashboard</button>
+        <button id="logout-btn" class="px-4 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white">Đăng xuất</button>
+      </div>
+    </header>
+
+    <div id="auth" class="card glass p-4 sm:p-6 mb-6">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="dot bg-green-500"></span>
+        <span class="text-xs text-slate-300">Xác thực quản trị</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+        <input id="admin-pass" type="password" placeholder="Nhập mật khẩu quản trị" class="w-full px-4 py-3 rounded-lg bg-slate-900/60 border border-slate-500 text-white outline-none focus:border-cyan-400" />
+        <button id="login-btn" class="px-4 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Đăng nhập</button>
+      </div>
+      <p id="auth-msg" class="mt-2 text-xs text-rose-300 hidden">Mật khẩu sai, vui lòng thử lại.</p>
+    </div>
+
+    <div id="dashboard" class="hidden space-y-5">
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <article class="card p-5 glass">
+          <h2 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Trạng thái tool</h2>
+          <p class="text-4xl font-extrabold">Online</p>
+          <p class="text-xs text-slate-400 mt-1">Last: <span id="last-time">-</span></p>
+        </article>
+        <article class="card p-5 glass">
+          <h2 class="text-sm text-slate-300 uppercase tracking-widest mb-3">API Key hiện tại</h2>
+          <div class="relative">
+            <input id="api-key" type="password" value="************************" class="w-full p-3 rounded-lg bg-slate-900/60 border border-slate-500 text-white" readonly />
+            <button id="toggle-key" class="absolute right-2 top-2 text-xs px-2 py-1 rounded bg-slate-700/80 hover:bg-slate-600">Hiện</button>
+            <button id="copy-key" class="absolute right-2 top-10 text-xs px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500">Sao chép</button>
+          </div>
+          <p class="mt-2 text-xs text-orange-300">Không chia sẻ với người khác!</p>
+        </article>
+        <article class="card p-5 glass">
+          <h2 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Packages đang chạy</h2>
+          <p class="text-3xl font-extrabold" id="package-count">0</p>
+          <p class="text-xs text-slate-400 mt-1">Package app Roblox</p>
+        </article>
+      </section>
+
+      <section class="card p-5 glass">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold">Danh sách key đã tạo</h3>
+          <button id="refresh-keys" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white">Refresh</button>
+        </div>
+        <div id="keys-list" class="space-y-2"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const adminPassword = 'moonlightadmin';
+
+    function formatTime(ms) {
+      const h = Math.floor(ms / 3600000); const m = Math.floor(ms % 3600000 / 60000); const s = Math.floor(ms % 60000 / 1000);
+      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function renderKeys() {
+      const keysList = document.getElementById('keys-list');
+      const storedKeys = JSON.parse(localStorage.getItem('created_keys') || '[]');
+      const now = Date.now();
+      keysList.innerHTML = '';
+
+      let active = 0;
+      const newKeys = storedKeys.filter(item => {
+        const expire = item.createdAt + 24*60*60*1000;
+        return expire > now;
+      });
+
+      localStorage.setItem('created_keys', JSON.stringify(newKeys));
+
+      if (newKeys.length === 0) {
+        keysList.innerHTML = '<p class="text-sm text-slate-400">Chưa có key nào hợp lệ.</p>';
+      }
+
+      newKeys.forEach(item => {
+        const remain = (item.createdAt + 24*60*60*1000) - now;
+        if (remain > 0) active++;
+
+        const row = document.createElement('div');
+        row.className = 'border border-slate-700 rounded-lg p-3 flex justify-between items-center';
+        row.innerHTML = `
+          <div class="text-sm font-mono text-emerald-200">${item.key}</div>
+          <div class="text-xs text-slate-300">Còn ${formatTime(remain)}</div>
+        `;
+        keysList.appendChild(row);
+      });
+
+      document.getElementById('package-count').innerText = active;
+      document.getElementById('last-time').innerText = new Date().toLocaleString('vi-VN');
+    }
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === adminPassword) {
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        renderKeys();
+      } else {
+        document.getElementById('auth-msg').classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('refresh-keys').addEventListener('click', renderKeys);
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('auth').classList.remove('hidden');
+      document.getElementById('admin-pass').value = '';
+      document.getElementById('auth-msg').classList.add('hidden');
+    });
+
+    document.getElementById('toggle-key').addEventListener('click', () => {
+      const k = document.getElementById('api-key');
+      k.type = k.type === 'password' ? 'text' : 'password';
+    });
+
+    document.getElementById('copy-key').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('api-key').value);
+    });
+
+    document.getElementById('dashboard-btn').addEventListener('click', renderKeys);
+
+    renderKeys();
+  </script>
+</body>
+</html>

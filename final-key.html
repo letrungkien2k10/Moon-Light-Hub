@@ -24,7 +24,8 @@
 <body>
     <div class="glass-card text-center">
         <h1 class="text-4xl font-extrabold gradient-text mb-6">Key Của Bạn</h1>
-        <div id="final-key-display" class="text-3xl font-mono bg-black/60 p-6 rounded-xl mb-8 break-all"></div>
+        <div id="final-key-display" class="text-3xl font-mono bg-black/60 p-6 rounded-xl mb-4 break-all"></div>
+        <div id="countdown" class="text-lg text-gray-300 mb-6">Thời gian còn lại: <span id="time-left" class="text-green-400 font-bold">24:00:00</span></div>
         <button id="copy-key" class="px-10 py-5 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-xl transition-all">
             Copy Key
         </button>
@@ -60,6 +61,8 @@
                         navigator.clipboard.writeText(key).then(() => showToast('Đã sao chép key!'), () => showToast('Copy thất bại', 'error'));
                     };
 
+                    // Start countdown (24h from now)
+                    startCountdown(Date.now() + 24 * 60 * 60 * 1000);
                     return;
                 } catch (error) {
                     console.warn('validate token via server failed, checking local fallback', error);
@@ -70,6 +73,8 @@
                         document.getElementById('copy-key').onclick = () => {
                             navigator.clipboard.writeText(localKey).then(() => showToast('Đã sao chép key!'), () => showToast('Copy thất bại', 'error'));
                         };
+                        // Start countdown for fallback (24h)
+                        startCountdown(Date.now() + 24 * 60 * 60 * 1000);
                         return;
                     }
 
@@ -81,6 +86,25 @@
 
             document.getElementById('final-key-display').innerText = 'Link không hợp lệ: thiếu token.';
             document.getElementById('copy-key').classList.add('hidden');
+        }
+
+        function startCountdown(expireTime) {
+            const countdownElement = document.getElementById('time-left');
+            const interval = setInterval(() => {
+                const now = Date.now();
+                const timeLeft = expireTime - now;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    countdownElement.innerText = '00:00:00';
+                    document.getElementById('final-key-display').innerText = 'Key đã hết hạn!';
+                    document.getElementById('copy-key').classList.add('hidden');
+                    return;
+                }
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                countdownElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
         }
 
         loadKey();

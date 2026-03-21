@@ -13,12 +13,8 @@
         .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .pulse-glow { animation: pulse-glow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
         @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(34,197,94,0.5); } 50% { box-shadow: 0 0 40px rgba(34,197,94,0.8); } }
-        #key-link { background: #00000099; border-radius: 1rem; padding: 1.2rem; font-family: monospace; font-size: 1.4rem; word-break: break-all; user-select: all; }
-        .hidden { display: none !important; }
-        .disabled { opacity: 0.5; cursor: not-allowed; }
-        .toast { position: fixed; top: 1rem; right: 1rem; background: rgba(30,30,50,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(102,126,234,0.3); border-radius: 0.75rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; min-width: 320px; transform: translateX(120%); opacity: 0; transition: all 0.4s ease; z-index: 9999; }
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast-success { border-color: #4ade80; color: #4ade80; }
+        .btn { transition: all 0.3s ease; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34,197,94,0.4); }
     </style>
 </head>
 <body>
@@ -26,56 +22,28 @@
         <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center pulse-glow">
             <i data-lucide="key" class="w-10 h-10 text-white"></i>
         </div>
-        
+
         <h1 class="text-4xl font-extrabold gradient-text mb-4">Moon Light Hub - Key 24h</h1>
-        
-        <p class="text-lg text-gray-300 mb-8" id="status-text">Bạn đã vượt link4sub thành công!<br>Bây giờ join 2 server Discord để tiếp tục.</p>
-        
-        <!-- Bước 3: Join 2 server -->
-        <div id="join-step" class="mb-10 space-y-6">
-            <div>
-                <p class="text-gray-300 mb-3">1. Join Server Moon Light Hub True 1</p>
-                <a href="https://discord.gg/example1?ref=join1" target="_blank" class="inline-block px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all">
-                    Join Server 1
-                </a>
-            </div>
-            <div>
-                <p class="text-gray-300 mb-3">2. Join Server Moon Light Hub True 2</p>
-                <a href="https://discord.gg/example2?ref=join2" target="_blank" class="inline-block px-6 py-3 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all">
-                    Join Server 2
-                </a>
-            </div>
-            <button id="confirm-join" class="mt-6 px-10 py-4 rounded-full bg-gray-600 text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all" disabled>
-                Tôi đã join cả 2 server
-            </button>
-        </div>
-        
-        <!-- Phần Create Key (ẩn ban đầu) -->
-        <div id="create-section" class="hidden">
-            <p class="text-gray-400 mb-6">Hoàn thành! Bấm để tạo link key unique (mỗi lần khác nhau, không copy link cũ nhé).</p>
-            <button id="create-key-btn" class="px-10 py-5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl transition-all transform hover:scale-105 shadow-xl shadow-green-500/40 flex items-center justify-center gap-3 mx-auto">
-                <i data-lucide="key" class="w-6 h-6"></i>
-                Create Unique Key Link
-            </button>
-            
-            <div id="final-key" class="hidden mt-8">
-                <p class="text-green-400 mb-3 font-semibold">Link lấy key unique của bạn (chỉ dùng 1 lần):</p>
-                <div id="key-link" class="mb-6"></div>
-                <button id="copy-final" class="px-8 py-4 rounded-full bg-green-700 hover:bg-green-800 text-white font-bold transition-all">
-                    Copy Link Key
-                </button>
-            </div>
-        </div>
-        
+
+        <p class="text-lg text-gray-300 mb-8">
+            Chào mừng bạn đến với Moon Light Hub!<br>
+            Để nhận key miễn phí, hãy hoàn thành nhiệm vụ link4sub trước.
+        </p>
+
+        <a id="start-link4sub" href="#" class="inline-block px-10 py-5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl btn shadow-xl shadow-green-500/40">
+            <i data-lucide="external-link" class="w-6 h-6 inline mr-2"></i>
+            Bắt đầu nhiệm vụ Link4Sub
+        </a>
+
         <p class="text-sm text-gray-500 mt-8">
-            Link key unique có mã random, ai copy link cũ sẽ không lấy được key mới.
+            Sau khi hoàn thành nhiệm vụ, bạn sẽ được chuyển về bước tiếp theo.
         </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function generateRandomToken(length = 8) {
+        function generateRandomToken(length = 24) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let token = '';
             for (let i = 0; i < length; i++) {
@@ -84,137 +52,13 @@
             return token;
         }
 
-        function getBaseKey() {
-            const today = new Date();
-            const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const yy = String(today.getFullYear()).slice(-2);
-            return `moonlight-${dd}${mm}${yy}`;
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type} show`;
-            toast.innerHTML = `<span>${message}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
-        }
-
-        async function createUniqueKeyLink() {
-            const btn = document.getElementById('create-key-btn');
-            btn.disabled = true;
-            btn.classList.add('disabled');
-            document.getElementById('status-text').innerText = 'Đang tạo link key...';
-
-            try {
-                const res = await fetch('/.netlify/functions/get-key', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ source: 'web' }),
-                });
-
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-                const data = await res.json();
-                if (!data.token || !data.key) throw new Error('Dữ liệu trả về không hợp lệ');
-
-                const uniqueLink = `${window.location.origin}/final-key.html?token=${encodeURIComponent(data.token)}`;
-                document.getElementById('key-link').innerText = uniqueLink;
-                document.getElementById('final-key').classList.remove('hidden');
-                document.getElementById('status-text').innerText = 'Link key unique đã tạo! Mở để xem key (1 lần).';
-                showToast('Link key unique đã tạo! Copy và dùng ngay (mỗi lần khác nhau)', 'success');
-
-            } catch (error) {
-                console.error('Netlify get-key failed', error);
-
-                // Fallback token lưu trong localStorage, tránh lộ key raw trong URL
-                const fallbackKey = `${getBaseKey()}-${generateRandomToken(6)}`;
-                const fallbackToken = generateRandomToken(28);
-                localStorage.setItem(`fallback_key_${fallbackToken}`, fallbackKey);
-
-                const uniqueLink = `${window.location.origin}/final-key.html?token=${encodeURIComponent(fallbackToken)}`;
-                document.getElementById('key-link').innerText = uniqueLink;
-                document.getElementById('final-key').classList.remove('hidden');
-                document.getElementById('status-text').innerText = 'Không thể kết nối server; dùng link tạm local 1 lần.';
-                showToast('Đã tạo link dự phòng local (token).', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('disabled');
-            }
-        }
-
-        let joinedServer1 = false;
-        let joinedServer2 = false;
-        let autoCompleteTimer = null;
-
-        function tryStartAutoComplete() {
-            if (!joinedServer1 || !joinedServer2) return;
-            if (autoCompleteTimer) return;
-
-            document.getElementById('status-text').innerText = 'Đã join 2 server! Hoàn thành tự động sau 15 giây...';
-            autoCompleteTimer = setTimeout(() => {
-                completeJoinTask();
-                autoCompleteTimer = null;
-            }, 15000);
-        }
-
-        function completeJoinTask() {
-            const confirmBtn = document.getElementById('confirm-join');
-            confirmBtn.disabled = true;
-            confirmBtn.classList.add('disabled');
-
-            document.getElementById('join-step').classList.add('hidden');
-            document.getElementById('create-section').classList.remove('hidden');
-            document.getElementById('status-text').innerText = 'Đã join cả 2 server! Bấm Create để lấy link key unique.';
-            showToast('Bước join hoàn tất! Tạo key nào 🌙', 'success');
-
-            createUniqueKeyLink();
-        }
-
-        document.querySelectorAll('#join-step a').forEach((link, index) => {
-            link.addEventListener('click', () => {
-                if (index === 0) joinedServer1 = true;
-                if (index === 1) joinedServer2 = true;
-
-                const confirmBtn = document.getElementById('confirm-join');
-                if (joinedServer1 && joinedServer2) {
-                    confirmBtn.disabled = false;
-                    confirmBtn.classList.remove('disabled');
-                }
-
-                showToast(`Đã mở server ${index + 1}.`, 'success');
-                tryStartAutoComplete();
-            });
-        });
-
-        // Confirm join 2 server (user tự click sau khi join)
-        document.getElementById('confirm-join').addEventListener('click', () => {
-            joinedServer1 = true;
-            joinedServer2 = true;
-            if (autoCompleteTimer) {
-                clearTimeout(autoCompleteTimer);
-                autoCompleteTimer = null;
-            }
-            completeJoinTask();
-        });
-
-        // Create unique key LINK via Netlify function (one-time token)
-        document.getElementById('create-key-btn').addEventListener('click', createUniqueKeyLink);
-
-        // Copy link
-        document.getElementById('copy-final').addEventListener('click', () => {
-            const linkText = document.getElementById('key-link').innerText;
-            navigator.clipboard.writeText(linkText).then(() => {
-                showToast('Đã copy link key unique!', 'success');
-            }).catch(() => showToast('Copy thất bại, chọn thủ công nhé', 'error'));
-        });
-
-        // Nếu redirect từ link4sub
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('success') === '1') {
-                document.getElementById('status-text').innerText = 'Quay về thành công từ link4sub! Giờ join 2 server nhé.';
-            }
+        document.getElementById('start-link4sub').addEventListener('click', (e) => {
+            e.preventDefault();
+            const token = generateRandomToken();
+            localStorage.setItem('link4sub_token', token);
+            const redirectUrl = `${window.location.origin}/getkey2.html?token=${encodeURIComponent(token)}`;
+            const link4subUrl = `https://example.com/link4sub?redirect=${encodeURIComponent(redirectUrl)}`;
+            window.location.href = link4subUrl;
         });
     </script>
 </body>
