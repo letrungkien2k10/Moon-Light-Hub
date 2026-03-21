@@ -42,14 +42,13 @@
         async function loadKey() {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
-            const fallbackKey = urlParams.get('key');
 
             if (token) {
                 try {
                     const res = await fetch(`/.netlify/functions/validate-key?token=${encodeURIComponent(token)}`);
                     if (!res.ok) {
-                        const err = await res.json().catch(() => null);
-                        throw new Error(err?.message || 'Không thể xác thực token');
+                        // Try fallback localStorage if server token validation thảm bại
+                        throw new Error('validate-failed');
                     }
 
                     const data = await res.json();
@@ -60,26 +59,27 @@
                     document.getElementById('copy-key').onclick = () => {
                         navigator.clipboard.writeText(key).then(() => showToast('Đã sao chép key!'), () => showToast('Copy thất bại', 'error'));
                     };
-                    return;
 
+                    return;
                 } catch (error) {
-                    console.error('validate token failed', error);
+                    console.warn('validate token via server failed, checking local fallback', error);
+                    const localKey = localStorage.getItem(`fallback_key_${token}`);
+                    if (localKey) {
+                        localStorage.removeItem(`fallback_key_${token}`);
+                        document.getElementById('final-key-display').innerText = localKey;
+                        document.getElementById('copy-key').onclick = () => {
+                            navigator.clipboard.writeText(localKey).then(() => showToast('Đã sao chép key!'), () => showToast('Copy thất bại', 'error'));
+                        };
+                        return;
+                    }
+
                     document.getElementById('final-key-display').innerText = 'Token không hợp lệ hoặc đã dùng!';
                     document.getElementById('copy-key').classList.add('hidden');
                     return;
                 }
             }
 
-            if (fallbackKey) {
-                document.getElementById('final-key-display').innerText = fallbackKey;
-                document.getElementById('copy-key').onclick = () => {
-                    navigator.clipboard.writeText(fallbackKey).then(() => showToast('Đã sao chép key!'));
-                };
-                document.getElementById('copy-key').classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('final-key-display').innerText = 'Link không hợp lệ: thiếu token hoặc key.';
+            document.getElementById('final-key-display').innerText = 'Link không hợp lệ: thiếu token.';
             document.getElementById('copy-key').classList.add('hidden');
         }
 

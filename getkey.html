@@ -127,14 +127,16 @@
             } catch (error) {
                 console.error('Netlify get-key failed', error);
 
-                // Fallback local link khi function lỗi hoặc môi trường không hỗ trợ
-                const fallbackKey = `${getBaseKey()}-${generateRandomToken(4)}`;
-                const fallbackLink = `${window.location.origin}/final-key.html?key=${encodeURIComponent(fallbackKey)}`;
+                // Fallback token lưu trong localStorage, tránh lộ key raw trong URL
+                const fallbackKey = `${getBaseKey()}-${generateRandomToken(6)}`;
+                const fallbackToken = generateRandomToken(28);
+                localStorage.setItem(`fallback_key_${fallbackToken}`, fallbackKey);
 
-                document.getElementById('key-link').innerText = fallbackLink;
+                const uniqueLink = `${window.location.origin}/final-key.html?token=${encodeURIComponent(fallbackToken)}`;
+                document.getElementById('key-link').innerText = uniqueLink;
                 document.getElementById('final-key').classList.remove('hidden');
-                document.getElementById('status-text').innerText = 'Không thể kết nối server; sử dụng link tạm local (không one-time).';
-                showToast('Đã tạo link dự phòng local. Server one-time không khả dụng.', 'error');
+                document.getElementById('status-text').innerText = 'Không thể kết nối server; dùng link tạm local 1 lần.';
+                showToast('Đã tạo link dự phòng local (token).', 'error');
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('disabled');
