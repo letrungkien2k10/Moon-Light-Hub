@@ -125,9 +125,16 @@
                 showToast('Link key unique đã tạo! Copy và dùng ngay (mỗi lần khác nhau)', 'success');
 
             } catch (error) {
-                console.error(error);
-                showToast('Tạo link key thất bại. Thử lại sau.', 'error');
-                document.getElementById('status-text').innerText = 'Lỗi khi tạo link key, thử lại.';
+                console.error('Netlify get-key failed', error);
+
+                // Fallback local link khi function lỗi hoặc môi trường không hỗ trợ
+                const fallbackKey = `${getBaseKey()}-${generateRandomToken(4)}`;
+                const fallbackLink = `${window.location.origin}/final-key.html?key=${encodeURIComponent(fallbackKey)}`;
+
+                document.getElementById('key-link').innerText = fallbackLink;
+                document.getElementById('final-key').classList.remove('hidden');
+                document.getElementById('status-text').innerText = 'Không thể kết nối server; sử dụng link tạm local (không one-time).';
+                showToast('Đã tạo link dự phòng local. Server one-time không khả dụng.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('disabled');
