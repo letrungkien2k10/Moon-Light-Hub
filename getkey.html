@@ -150,6 +150,10 @@
         }
 
         function completeJoinTask() {
+            const confirmBtn = document.getElementById('confirm-join');
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('disabled');
+
             document.getElementById('join-step').classList.add('hidden');
             document.getElementById('create-section').classList.remove('hidden');
             document.getElementById('status-text').innerText = 'Đã join cả 2 server! Bấm Create để lấy link key unique.';
@@ -162,6 +166,13 @@
             link.addEventListener('click', () => {
                 if (index === 0) joinedServer1 = true;
                 if (index === 1) joinedServer2 = true;
+
+                const confirmBtn = document.getElementById('confirm-join');
+                if (joinedServer1 && joinedServer2) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.classList.remove('disabled');
+                }
+
                 showToast(`Đã mở server ${index + 1}.`, 'success');
                 tryStartAutoComplete();
             });
