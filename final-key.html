@@ -1,0 +1,56 @@
+<!-- final-key.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Key - Moon Light Hub</title>
+    <!-- style giống getkey.html, copy phần <style> từ trên vào đây -->
+</head>
+<body>
+    <div class="glass-card text-center">
+        <h1 class="text-4xl font-extrabold gradient-text mb-6">Key Của Bạn</h1>
+        <div id="final-key-display" class="text-3xl font-mono bg-black/60 p-6 rounded-xl mb-8 break-all"></div>
+        <button id="copy-key" class="px-10 py-5 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-xl transition-all">
+            Copy Key
+        </button>
+    </div>
+
+    <script>
+        async function loadKey() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (!token) {
+                document.getElementById('final-key-display').innerText = 'Link không hợp lệ: thiếu token.';
+                document.getElementById('copy-key').classList.add('hidden');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/.netlify/functions/validate-key?token=${encodeURIComponent(token)}`);
+                if (!res.ok) {
+                    const err = await res.json().catch(() => null);
+                    throw new Error(err?.message || 'Không thể xác thực token');
+                }
+
+                const data = await res.json();
+                if (!data.valid) throw new Error(data.message || 'Token không hợp lệ');
+
+                const key = data.key || 'moonlight-error';
+                document.getElementById('final-key-display').innerText = key;
+                document.getElementById('copy-key').onclick = () => {
+                    navigator.clipboard.writeText(key).then(() => alert('Đã copy key!'));
+                };
+
+            } catch (error) {
+                console.error('validate token failed', error);
+                document.getElementById('final-key-display').innerText = 'Link không hợp lệ hoặc đã dùng!';
+                document.getElementById('copy-key').classList.add('hidden');
+            }
+        }
+
+        loadKey();
+    </script>
+</body>
+</html>
