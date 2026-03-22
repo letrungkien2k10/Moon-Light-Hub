@@ -1,77 +1,61 @@
 // netlify/functions/validate-key.js
-const { getStore } = require('@netlify/blobs');
+import { getStore } from '@netlify/blobs';
 
 const HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Content-Type': 'application/json',
 };
 
-exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: HEADERS, body: '' };
+export default async (req, context) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('', { status: 200, headers: HEADERS });
   }
 
-  const token = event.queryStringParameters?.token;
+  const url = new URL(req.url);
+  const token = url.searchParams.get('token');
 
   if (!token) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({ valid: false, message: 'Thiếu token' }),
-    };
+    return new Response(JSON.stringify({ valid: false, message: 'Thiếu token' }), {
+      status: 400, headers: HEADERS
+    });
   }
 
   try {
-    const store = getStore({ name: 'moonlight-keys', consistency: 'strong' });
+    const store = getStore('moonlight-keys');
     const tokenKey = `token-${token}`;
 
-    // Lấy dữ liệu token
-    let tokenData;
-    try {
-      tokenData = await store.get(tokenKey, { type: 'json' });
-    } catch {
-      tokenData = null;
-    }
+    let tokenData = null;
+    try { tokenData = await store.get(tokenKey, { type: 'json' }); } catch {}
 
     if (!tokenData) {
-      return {
-        statusCode: 401,
-        headers: HEADERS,
-        body: JSON.stringify({ valid: false, message: 'Token không hợp lệ hoặc đã sử dụng' }),
-      };
+      return new Response(JSON.stringify({ valid: false, message: 'Token không hợp lệ hoặc đã sử dụng' }), {
+        status: 401, headers: HEADERS
+      });
     }
 
     // Kiểm tra hết hạn
     if (tokenData.expireAt && Date.now() > tokenData.expireAt) {
-      // Xóa token hết hạn
       await store.delete(tokenKey).catch(() => {});
-      return {
-        statusCode: 401,
-        headers: HEADERS,
-        body: JSON.stringify({ valid: false, message: 'Token đã hết hạn (quá 24 giờ)' }),
-      };
+      return new Response(JSON.stringify({ valid: false, message: 'Token đã hết hạn (quá 24 giờ)' }), {
+        status: 401, headers: HEADERS
+      });
     }
 
-    // ✅ Hợp lệ — xóa token ngay (one-time use)
-    await store.delete(tokenKey).catch((e) => {
-      console.warn('Could not delete token:', e.message);
-    });
+    // Hợp lệ — xóa token (one-time use)
+    await store.delete(tokenKey).catch((e) => console.warn('Cannot delete token:', e.message));
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify({
-        valid: true,
-        key: tokenData.key,
-        expireAt: tokenData.expireAt,
-      }),
-    };
+    return new Response(JSON.stringify({
+      valid: true,
+      key: tokenData.key,
+      expireAt: tokenData.expireAt,
+    }), { status: 200, headers: HEADERS });
+
   } catch (err) {
     console.error('validate-key error:', err);
-    return {
-      statusCode: 500,
-      headers: HEADERS,
-      body: JSON.stringify({ valid: false, message: 'Lỗi server: ' + err.message }),
-    };
+    return new Response(JSON.stringify({ valid: false, message: 'Lỗi server: ' + err.message }), {
+      status: 500, headers: HEADERS
+    });
   }
 };
+
+export const config = { path: '/.netlify/functions/validate-key' };
