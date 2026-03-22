@@ -390,6 +390,22 @@
             }
         }
 
+        // ── Lưu key vào manager (mlh_keys_v2) để admin thấy ──
+        function saveKeyToManager(key, source) {
+            try {
+                const keys = JSON.parse(localStorage.getItem('mlh_keys_v2') || '[]');
+                // Không lưu trùng
+                if (keys.some(k => k.key === key)) return;
+                keys.push({
+                    key,
+                    createdAt: Date.now(),
+                    ttl: 86400, // 24h
+                    source: source || 'user'
+                });
+                localStorage.setItem('mlh_keys_v2', JSON.stringify(keys));
+            } catch(e) { console.warn('saveKeyToManager error:', e); }
+        }
+
         function showSuccess(link, key) {
             document.getElementById('result-loading').classList.add('hidden');
             document.getElementById('result-success').classList.remove('hidden');
@@ -398,6 +414,9 @@
             updateProgress(100);
             setStatus('✅ Key đã sẵn sàng!');
 
+            // Lưu vào manager
+            if (key) saveKeyToManager(key, 'server');
+
             document.getElementById('copy-link-btn').onclick = () => {
                 navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));
             };
@@ -405,7 +424,6 @@
         }
 
         function createKeyFallback() {
-            // Fallback: tạo key local + token local
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -423,6 +441,9 @@
             document.getElementById('key-link-display-fallback').textContent = link;
             updateProgress(100);
             setStatus('⚠️ Offline mode — key vẫn hoạt động');
+
+            // Lưu vào manager
+            saveKeyToManager(fallbackKey, 'fallback');
 
             document.getElementById('copy-link-btn-fallback').onclick = () => {
                 navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));

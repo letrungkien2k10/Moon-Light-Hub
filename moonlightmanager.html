@@ -139,12 +139,12 @@
         </div>
       </section>
 
-      <!-- Danh sách key -->
+      <!-- Danh sách key admin tạo -->
       <section class="card glass p-5">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-base flex items-center gap-2">
             <i data-lucide="list" class="w-5 h-5 text-indigo-400"></i>
-            Danh sách Key
+            Key Admin tạo thủ công
           </h3>
           <button id="refresh-btn" class="btn-primary text-xs px-3 py-1.5">
             <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i>
@@ -152,6 +152,29 @@
           </button>
         </div>
         <div id="keys-list" class="space-y-2 text-sm"></div>
+      </section>
+
+      <!-- Key hệ thống từ Netlify Blobs -->
+      <section class="card glass p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-base flex items-center gap-2">
+            <i data-lucide="database" class="w-5 h-5 text-cyan-400"></i>
+            Key hệ thống (từ Blobs)
+            <span id="blobs-count" class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">0</span>
+          </h3>
+          <button id="fetch-blobs-btn" class="btn-primary text-xs px-3 py-1.5" style="background:linear-gradient(to right,#0891b2,#0e7490)">
+            <i data-lucide="cloud-download" class="w-3 h-3 inline mr-1"></i>
+            Tải từ server
+          </button>
+        </div>
+        <!-- Key hôm nay -->
+        <div class="mb-4 p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
+          <p class="text-xs text-cyan-400 mb-1 font-semibold">🔑 Key hôm nay (daily key):</p>
+          <code id="today-key-display" class="text-sm text-cyan-200 mono break-all">Bấm "Tải từ server" để xem</code>
+        </div>
+        <div id="blobs-keys-list" class="space-y-2 text-sm">
+          <p class="text-slate-400 text-sm">Bấm "Tải từ server" để xem danh sách key user đã lấy.</p>
+        </div>
       </section>
 
       <!-- Upload script -->
@@ -179,6 +202,24 @@
           </button>
         </div>
         <p id="upload-msg" class="mt-2 text-xs text-green-400 hidden"></p>
+      </section>
+
+      <!-- Key đã dùng (từ Netlify Blobs) -->
+      <section class="card glass p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-base flex items-center gap-2">
+            <i data-lucide="history" class="w-5 h-5 text-yellow-400"></i>
+            Key đã được dùng
+            <span id="used-keys-count" class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">0</span>
+          </h3>
+          <button id="refresh-used-btn" class="btn-primary text-xs px-3 py-1.5">
+            <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i>
+            Tải lại
+          </button>
+        </div>
+        <div id="used-keys-loading" class="text-slate-400 text-sm">Đang tải...</div>
+        <div id="used-keys-list" class="space-y-2 text-sm hidden"></div>
+        <div id="used-keys-error" class="text-red-400 text-sm hidden"></div>
       </section>
 
       <!-- Danh sách script đã upload -->
@@ -209,6 +250,8 @@
 
     // ── Auth ──
     const ADMIN_PASSWORD = 'moonlightadmin'; // ← Đổi thành mật khẩu của bạn
+    // Token này phải khớp với ADMIN_TOKEN trong list-keys.js
+    const ADMIN_TOKEN = 'moonlight-admin-secret-2024'; // ← Đổi giống list-keys.js
 
     let isLoggedIn = false;
     let adminCaptchaPassed = false;
@@ -320,8 +363,16 @@
         const rem = isPerm ? Infinity : (item.createdAt + item.ttl * 1000 - now);
         const row = document.createElement('div');
         row.className = 'flex flex-col sm:flex-row sm:items-center gap-2 bg-slate-900/50 border border-slate-700/60 rounded-lg p-3';
+        const sourceLabel = {
+          'server': '🌐 Server',
+          'fallback': '💾 Offline',
+          'final-key': '✅ Đã dùng',
+          'user': '👤 Admin'
+        }[item.source] || '—';
+
         row.innerHTML = `
           <span class="mono text-emerald-300 text-sm flex-1 break-all">${item.key}</span>
+          <span class="text-xs text-slate-400">${sourceLabel}</span>
           <span class="${isPerm ? 'tag tag-perm' : 'tag tag-active'}">${isPerm ? 'Vĩnh viễn' : formatMs(rem)}</span>
           <span class="text-xs text-slate-500">${formatDate(item.createdAt)}</span>
           <button class="del-key btn-danger" data-idx="${idx}">Xóa</button>
@@ -337,6 +388,48 @@
           renderKeys();
         });
       });
+    }
+
+    // ── Fetch key từ Netlify Blobs ──
+    async function fetchBlobsKeys() {
+      const el = document.getElementById('blobs-keys-list');
+      const countEl = document.getElementById('blobs-count');
+      const todayEl = document.getElementById('today-key-display');
+      if (!el) return;
+
+      el.innerHTML = '<p class="text-cyan-400 text-sm animate-pulse">⏳ Đang tải từ server...</p>';
+
+      try {
+        const res = await fetch('/.netlify/functions/log-key', {
+          headers: { 'x-admin-key': ADMIN_PASSWORD }
+        });
+        if (res.status === 401) throw new Error('Sai mật khẩu admin');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        if (todayEl) todayEl.textContent = data.todayKey || '(chưa tạo hôm nay)';
+        if (countEl) countEl.textContent = data.total || 0;
+        document.getElementById('stat-active').textContent = (getKeys().filter(k => k.ttl === 0 || k.createdAt + k.ttl * 1000 > Date.now()).length) + (data.total || 0);
+
+        if (!data.logs || !data.logs.length) {
+          el.innerHTML = '<p class="text-slate-400 text-sm">Chưa có user nào lấy key.</p>';
+          return;
+        }
+
+        el.innerHTML = '';
+        data.logs.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-col sm:flex-row sm:items-center gap-2 bg-cyan-950/40 border border-cyan-800/40 rounded-lg p-3';
+          row.innerHTML = `
+            <span class="mono text-cyan-300 text-sm flex-1 break-all">${item.key}</span>
+            <span class="tag" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">✅ Đã dùng</span>
+            <span class="text-xs text-slate-500">${item.usedAtStr || new Date(item.usedAt).toLocaleString('vi-VN')}</span>
+          `;
+          el.appendChild(row);
+        });
+      } catch(err) {
+        el.innerHTML = `<p class="text-red-400 text-sm">❌ Lỗi: ${err.message}</p>`;
+      }
     }
 
     document.getElementById('create-key-btn').addEventListener('click', () => {
@@ -357,6 +450,7 @@
     });
 
     document.getElementById('refresh-btn').addEventListener('click', renderAll);
+    document.getElementById('fetch-blobs-btn').addEventListener('click', fetchBlobsKeys);
 
     // ── Scripts ──
     function renderScripts() {
@@ -430,14 +524,78 @@
       renderScripts();
     });
 
+    // ── Load used keys từ Netlify Blobs (log-key function) ──
+    async function loadUsedKeys() {
+      const loadingEl = document.getElementById('used-keys-loading');
+      const listEl = document.getElementById('used-keys-list');
+      const errorEl = document.getElementById('used-keys-error');
+      const countEl = document.getElementById('used-keys-count');
+
+      if (loadingEl) loadingEl.classList.remove('hidden');
+      if (listEl) listEl.classList.add('hidden');
+      if (errorEl) errorEl.classList.add('hidden');
+
+      try {
+        // Dùng log-key GET với x-admin-key header
+        const res = await fetch('/.netlify/functions/log-key', {
+          headers: { 'x-admin-key': ADMIN_PASSWORD }
+        });
+
+        if (res.status === 401) throw new Error('Sai mật khẩu admin');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const data = await res.json();
+        if (loadingEl) loadingEl.classList.add('hidden');
+
+        if (!data.logs || data.logs.length === 0) {
+          if (listEl) { listEl.innerHTML = '<p class="text-slate-400 text-sm">Chưa có key nào được dùng.</p>'; listEl.classList.remove('hidden'); }
+          if (countEl) countEl.textContent = '0';
+          return;
+        }
+
+        if (countEl) countEl.textContent = data.total;
+        if (listEl) {
+          listEl.innerHTML = '';
+          data.logs.forEach(log => {
+            const sourceLabel = {
+              'final-key': '✅ Đã xác minh',
+              'server': '🌐 Server',
+              'fallback': '💾 Offline',
+            }[log.source] || '—';
+
+            const row = document.createElement('div');
+            row.className = 'flex flex-col sm:flex-row sm:items-center gap-2 bg-slate-900/50 border border-slate-700/60 rounded-lg p-3';
+            row.innerHTML = `
+              <span class="mono text-yellow-300 text-sm flex-1 break-all">${log.key}</span>
+              <span class="text-xs text-cyan-400 font-semibold">${sourceLabel}</span>
+              <span class="text-xs text-slate-400">${log.usedAtStr || new Date(log.usedAt).toLocaleString('vi-VN')}</span>
+            `;
+            listEl.appendChild(row);
+          });
+          listEl.classList.remove('hidden');
+        }
+        lucide.createIcons();
+
+      } catch(err) {
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (errorEl) { errorEl.textContent = '❌ Lỗi: ' + err.message; errorEl.classList.remove('hidden'); }
+      }
+    }
+
+    document.getElementById('refresh-used-btn').addEventListener('click', loadUsedKeys);
+
     function renderAll() {
       renderKeys();
       renderScripts();
+      loadUsedKeys();
+      fetchBlobsKeys();
       lucide.createIcons();
     }
 
-    // Auto refresh mỗi 10s khi đã login
-    setInterval(() => { if (isLoggedIn) renderAll(); }, 10000);
+    // Auto refresh mỗi 30s
+    setInterval(() => { if (isLoggedIn) { renderKeys(); renderScripts(); } }, 30000);
+    // Reload used keys từ Blobs mỗi 60s
+    setInterval(() => { if (isLoggedIn) loadUsedKeys(); }, 60000);
   </script>
 </body>
 </html>

@@ -120,12 +120,31 @@
             lucide.createIcons();
         }
 
-        function showSuccess(key) {
+        // Gọi Netlify function để lưu key đã dùng vào Blobs
+        async function logKeyToServer(key) {
+            try {
+                await fetch('/.netlify/functions/log-key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, source: 'final-key' })
+                });
+            } catch(e) {
+                console.warn('logKeyToServer failed (non-critical):', e);
+            }
+        }
+
+        function showSuccess(key, expireAt) {
             document.getElementById('view-loading').classList.add('hidden');
             document.getElementById('view-error').classList.add('hidden');
             document.getElementById('view-success').classList.remove('hidden');
             document.getElementById('key-display').textContent = key;
             lucide.createIcons();
+
+            // Ghi log lên server — chỉ lần đầu, không ghi lại khi reload
+            if (sessionStorage.getItem('logged_key') !== key) {
+                logKeyToServer(key);
+                sessionStorage.setItem('logged_key', key);
+            }
 
             // Copy button
             document.getElementById('copy-key-btn').onclick = () => {
@@ -134,8 +153,8 @@
                     .catch(() => showToast('Copy thất bại', 'error'));
             };
 
-            // Countdown 24h từ lúc tải trang
-            startCountdown(Date.now() + 24 * 60 * 60 * 1000);
+            // Countdown dùng expireAt từ server (chính xác), fallback 24h
+            startCountdown(expireAt || (Date.now() + 24 * 60 * 60 * 1000));
         }
 
         function startCountdown(expireAt) {
@@ -149,7 +168,20 @@
                     document.getElementById('key-display').textContent = '⏰ Key đã hết hạn!';
                     document.getElementById('key-display').classList.add('error');
                     document.getElementById('copy-key-btn').disabled = true;
-                    showToast('Key đã hết hạn', 'error');
+                    showToast('Key đã hết hạn — đang chuyển trang...', 'error');
+
+                    // Xóa cache sessionStorage
+                    const token = new URLSearchParams(window.location.search).get('token');
+                    if (token) {
+                        sessionStorage.removeItem(`key_cache_${token}`);
+                        sessionStorage.removeItem(`key_cache_expire_${token}`);
+                        sessionStorage.removeItem('logged_key');
+                    }
+
+                    // Redirect về getkey sau 3 giây
+                    setTimeout(() => {
+                        window.location.href = '/getkey.html';
+                    }, 3000);
                     return;
                 }
                 const h = Math.floor(left / 3600000);
@@ -169,6 +201,16 @@
             const params = new URLSearchParams(window.location.search);
             const token = params.get('token');
 
+            // ── Kiểm tra sessionStorage trước (reload lại vẫn hiện key) ──
+            if (token) {
+                const cached = sessionStorage.getItem(`key_cache_${token}`);
+                const cachedExpire = parseInt(sessionStorage.getItem(`key_cache_expire_${token}`) || '0');
+                if (cached && Date.now() < cachedExpire) {
+                    showSuccess(cached, cachedExpire);
+                    return;
+                }
+            }
+
             if (!token) {
                 showError('Link không hợp lệ', '❌ Thiếu token trong URL');
                 return;
@@ -180,7 +222,13 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 if (!data.valid) throw new Error(data.message || 'Token không hợp lệ hoặc đã hết hạn');
-                showSuccess(data.key);
+
+                // Lưu vào sessionStorage để reload vẫn hiện được
+                const expireAt = data.expireAt || (Date.now() + 24 * 60 * 60 * 1000);
+                sessionStorage.setItem(`key_cache_${token}`, data.key);
+                sessionStorage.setItem(`key_cache_expire_${token}`, expireAt.toString());
+
+                showSuccess(data.key, expireAt);
                 return;
             } catch (serverErr) {
                 console.warn('Server validate failed, trying localStorage fallback...', serverErr);
@@ -189,8 +237,11 @@
             // 2. Fallback: kiểm tra localStorage (offline mode)
             const localKey = localStorage.getItem(`fallback_key_${token}`);
             if (localKey) {
-                localStorage.removeItem(`fallback_key_${token}`);
-                showSuccess(localKey);
+                // KHÔNG xóa localStorage ngay — giữ lại để reload được
+                const expireAt = Date.now() + 24 * 60 * 60 * 1000;
+                sessionStorage.setItem(`key_cache_${token}`, localKey);
+                sessionStorage.setItem(`key_cache_expire_${token}`, expireAt.toString());
+                showSuccess(localKey, expireAt);
                 return;
             }
 
