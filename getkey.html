@@ -61,8 +61,8 @@
         </button>
 
         <p class="text-xs text-gray-500 mt-6">
-            ⚠️ Không tắt tab trong khi hoàn thành Linkvertise.<br>
-            Key có hiệu lực 24 giờ kể từ khi tạo.
+            ✅ Bạn có thể tắt tab này sau khi bấm nút — session được lưu 24 giờ.<br>
+            Sau khi hoàn thành Linkvertise, bạn sẽ tự động được chuyển về để lấy key.
         </p>
     </div>
 
@@ -112,15 +112,17 @@
             localStorage.removeItem('lv_verified');
 
             // Lưu token vào localStorage trước khi redirect
+            // Tăng lên 24 giờ — user có thể tắt tab, quay lại sau vẫn được
             localStorage.setItem('lv_token', token);
-            localStorage.setItem('lv_token_expire', Date.now() + 30 * 60 * 1000); // 30 phút để hoàn thành
+            localStorage.setItem('lv_token_expire', Date.now() + 24 * 60 * 60 * 1000); // 24 giờ
             localStorage.setItem('visited_getkey', 'true');
+            localStorage.setItem('lv_start_time', Date.now().toString());
 
-            // URL getkey2.html sẽ nhận token qua query param khi Linkvertise redirect về
-            const redirectUrl = `${window.location.origin}/getkey2.html?token=${encodeURIComponent(token)}`;
+            // Redirect URL về getkey2 — KHÔNG kèm token trong URL
+            // Linkvertise sẽ tự thêm ?hash= của nó khi redirect về
+            // getkey2 sẽ chấp nhận bất kỳ ?hash= nào miễn còn trong 30 phút
+            const redirectUrl = `${window.location.origin}/getkey2.html`;
 
-            // Chuyển đến Linkvertise với redirect về getkey2 kèm token
-            // Thay YOUR_LINKVERTISE_ID và YOUR_LINK_ID bằng ID thật của bạn
             const lvUrl = `https://direct-link.net/4462018/EbAEdp0Kh1IM?redirect=${encodeURIComponent(redirectUrl)}`;
 
             window.location.href = lvUrl;

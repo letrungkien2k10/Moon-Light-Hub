@@ -225,26 +225,32 @@
 
         // ── Xác thực token từ URL ──
         const urlParams = new URLSearchParams(window.location.search);
-        const tokenFromUrl = urlParams.get('token');
+        // Linkvertise redirect về với ?hash= thay vì ?token=
+        // Nếu không có param nào → user có thể đã tắt tab và quay lại trực tiếp
+        const tokenFromUrl = urlParams.get('token') || urlParams.get('hash') || urlParams.get('ref') || urlParams.get('key');
         const storedToken = localStorage.getItem('lv_token');
         const tokenExpire = parseInt(localStorage.getItem('lv_token_expire') || '0');
         const visitedGetkey = localStorage.getItem('visited_getkey') === 'true';
 
-        const isValid = (
-            visitedGetkey &&
-            tokenFromUrl &&
-            storedToken &&
-            tokenFromUrl === storedToken &&
-            Date.now() < tokenExpire
-        );
+        // Hợp lệ nếu:
+        // 1. Đã qua getkey (visited_getkey = true)
+        // 2. Còn trong 24 giờ (user có thể tắt tab, quay lại sau)
+        // 3. Có bất kỳ param token/hash nào trong URL (từ Linkvertise)
+        //    HOẶC không có param nhưng vẫn còn session hợp lệ (trường hợp redirect lạ)
+        const hasSession = visitedGetkey && Date.now() < tokenExpire;
+        const isValid = hasSession && (!!tokenFromUrl || !!storedToken);
 
         if (!isValid) {
+            // Kiểm tra thêm: nếu có visited_getkey nhưng hết hạn → thông báo rõ hơn
+            if (visitedGetkey && Date.now() >= tokenExpire) {
+                document.getElementById('access-denied').querySelector('p').textContent =
+                    'Session đã hết hạn (24 giờ). Vui lòng bắt đầu lại từ trang lấy key.';
+            }
             document.getElementById('access-denied').classList.remove('hidden');
             lucide.createIcons();
         } else {
-            // Token hợp lệ — xóa khỏi storage để không dùng lại
-            localStorage.removeItem('lv_token');
-            localStorage.removeItem('lv_token_expire');
+            // Hợp lệ — GIỮ LẠI storage để user có thể tắt tab rồi quay lại
+            // Chỉ xóa token URL param đã dùng, KHÔNG xóa visited_getkey và expire
             document.getElementById('main-flow').classList.remove('hidden');
             lucide.createIcons();
             startFlow();
