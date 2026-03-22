@@ -8,264 +8,196 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #0f0f1a; 
-            color: white; 
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 0; 
-        }
-        .glass-card { 
-            background: rgba(255,255,255,0.04); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,0.14); 
-            border-radius: 1.5rem; 
-            padding: 2rem; 
-            max-width: 620px; 
-            width: 94%; 
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4); 
-        }
-        .gradient-text { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            background-clip: text; 
-            -webkit-background-clip: text; 
-            color: transparent; 
-        }
-        .key-display { 
-            background: rgba(0,0,0,0.6); 
-            border: 1px dashed rgba(100,100,255,0.4); 
-            border-radius: 1rem; 
-            padding: 1.15rem 1.2rem; 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 1.55rem; 
-            word-break: break-all; 
-            text-align: center; 
-        }
-        .btn { transition: all 0.25s ease; }
-        .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
-        .toast { 
-            position: fixed; 
-            top: 1rem; 
-            right: 1rem; 
-            background: rgba(18,24,45,0.92); 
-            backdrop-filter: blur(5px); 
-            border: 1px solid rgba(102,126,234,0.3); 
-            border-radius: 0.75rem; 
-            padding: 0.9rem 1rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 0.65rem; 
-            min-width: 300px; 
-            transform: translateX(120%); 
-            opacity: 0; 
-            transition: all 0.35s ease; 
-            z-index: 9999; 
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 1rem; }
+        .glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.14); border-radius: 1.5rem; padding: 2rem; max-width: 620px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,0.4); position: relative; z-index: 1; }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .key-display { background: rgba(0,0,0,0.6); border: 1px dashed rgba(100,100,255,0.4); border-radius: 1rem; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 1.5rem; word-break: break-all; text-align: center; color: #a5f3fc; letter-spacing: 0.05em; }
+        .key-display.error { color: #f87171; border-color: rgba(248,113,113,0.4); }
+        .toast { position: fixed; top: 1rem; right: 1rem; background: rgba(18,24,45,0.92); backdrop-filter: blur(5px); border: 1px solid rgba(102,126,234,0.3); border-radius: 0.75rem; padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.65rem; min-width: 280px; transform: translateX(120%); opacity: 0; transition: all 0.35s ease; z-index: 9999; }
         .toast.show { transform: translateX(0); opacity: 1; }
         .toast-success { color: #7ee787; border-color: #7ee787; }
         .toast-error { color: #f97316; border-color: #f97316; }
-        .loader { 
-            width: 24px; 
-            height: 24px; 
-            border: 3px solid rgba(102,126,234,0.3); 
-            border-top-color: #667eea; 
-            border-radius: 50%; 
-            animation: spin 0.8s linear infinite; 
-            display: inline-block; 
-        }
+        .loader { width: 28px; height: 28px; border: 3px solid rgba(102,126,234,0.3); border-top-color: #667eea; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
-        .stars { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            pointer-events: none; 
-            overflow: hidden; 
-            z-index: 0; 
-        }
-        .star { 
-            position: absolute; 
-            width: 2px; 
-            height: 2px; 
-            background: white; 
-            border-radius: 50%; 
-            opacity: 0; 
-            animation: twinkle 3s infinite; 
-        }
-        @keyframes twinkle { 
-            0% { opacity: 0; transform: scale(0.5); } 
-            50% { opacity: 1; transform: scale(1); } 
-            100% { opacity: 0; transform: scale(0.5); } 
-        }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
+        .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
+        @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem 1.5rem; border-radius: 9999px; font-weight: 700; font-size: 1rem; transition: all 0.25s; cursor: pointer; border: none; flex: 1; }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-green { background: linear-gradient(to right, #22c55e, #10b981); color: white; }
+        .btn-indigo { background: linear-gradient(to right, #6366f1, #4f46e5); color: white; }
+        .countdown-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem 1rem; text-align: center; }
     </style>
 </head>
 <body>
     <div class="stars" id="stars"></div>
-    
+
     <div class="glass-card text-center">
         <h1 class="text-4xl font-extrabold gradient-text mb-6">🔑 Key của Bạn</h1>
-        
-        <div id="loading" class="mb-6">
+
+        <!-- Loading -->
+        <div id="view-loading" class="mb-6">
             <div class="loader mx-auto mb-3"></div>
-            <p class="text-gray-300">Đang xác minh key từ server...</p>
+            <p class="text-gray-300">Đang xác minh token...</p>
         </div>
-        
-        <div id="success" class="hidden">
-            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
-                <p class="text-green-300 text-sm font-semibold flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-5 h-5"></i>
-                    Key verified thành công!
-                </p>
+
+        <!-- Success -->
+        <div id="view-success" class="hidden">
+            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-5 flex items-center justify-center gap-2">
+                <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                <span class="text-green-300 text-sm font-semibold">Token verified thành công!</span>
             </div>
-            
-            <div id="final-key-display" class="key-display text-3xl font-mono bg-black/60 p-6 rounded-xl mb-6 break-all"></div>
-            
-            <div id="countdown" class="text-lg text-gray-300 mb-6">
-                Thời gian có hiệu lực: <span id="time-left" class="text-green-400 font-bold">24:00:00</span>
+
+            <div id="key-display" class="key-display mb-5"></div>
+
+            <div class="countdown-box mb-5">
+                <p class="text-gray-400 text-sm mb-1">Thời gian còn lại:</p>
+                <span id="time-left" class="text-green-400 font-bold text-xl font-mono">24:00:00</span>
             </div>
-            
-            <div class="flex gap-3 flex-col sm:flex-row">
-                <button id="copy-key" class="flex-1 px-10 py-4 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+
+            <div class="flex gap-3">
+                <button id="copy-key-btn" class="btn btn-green">
                     <i data-lucide="copy" class="w-5 h-5"></i>
                     Copy Key
                 </button>
-                <a href="/getkey.html" class="flex-1 px-10 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 text-center">
+                <a href="/getkey.html" class="btn btn-indigo text-white no-underline">
                     <i data-lucide="home" class="w-5 h-5"></i>
                     Trang chủ
                 </a>
             </div>
         </div>
-        
-        <div id="error" class="hidden">
-            <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-                <p class="text-red-300 text-sm font-semibold flex items-center justify-center gap-2">
-                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    <span id="error-msg">Lỗi xác minh key</span>
-                </p>
+
+        <!-- Error -->
+        <div id="view-error" class="hidden">
+            <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-5 flex items-center justify-center gap-2">
+                <i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>
+                <span id="error-msg" class="text-red-300 text-sm font-semibold">Lỗi xác minh token</span>
             </div>
-            
-            <div id="final-key-display" class="key-display text-2xl text-red-400 bg-red-500/5 p-6 rounded-xl mb-6"></div>
-            
-            <a href="/getkey.html" class="inline-block px-10 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+
+            <div id="error-display" class="key-display error mb-5 text-base"></div>
+
+            <a href="/getkey.html" class="btn btn-indigo text-white no-underline" style="display:inline-flex;width:auto;padding:0.75rem 2rem;">
                 <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                Quay lại
+                Quay lại lấy Key mới
             </a>
         </div>
-        
-        <p class="text-xs text-gray-500 mt-8">
-            ⚠️ Token này chỉ dùng được một lần. Link sẽ hết hạn sau 24 giờ.
+
+        <p class="text-xs text-gray-600 mt-7">
+            ⚠️ Token chỉ dùng được một lần. Key có hiệu lực 24 giờ.
         </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
+        // Tạo sao nền
+        (function() {
+            const c = document.getElementById('stars');
             for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                starsContainer.appendChild(star);
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${Math.random()*3+2}s`;
+                c.appendChild(s);
             }
-        }
-        createStars();
+        })();
 
         function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type} show`;
-            toast.innerHTML = `<span>${message}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3800);
+            const t = document.createElement('div');
+            t.className = `toast toast-${type} show`;
+            t.innerHTML = `<span>${message}</span>`;
+            document.body.appendChild(t);
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3800);
         }
 
-        function showError(message) {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('success').classList.add('hidden');
-            document.getElementById('error').classList.remove('hidden');
-            document.getElementById('error-msg').innerText = message;
-            document.getElementById('final-key-display').innerText = '❌ ' + message;
+        function showError(msg, detail = '') {
+            document.getElementById('view-loading').classList.add('hidden');
+            document.getElementById('view-success').classList.add('hidden');
+            document.getElementById('view-error').classList.remove('hidden');
+            document.getElementById('error-msg').textContent = msg;
+            document.getElementById('error-display').textContent = detail || '❌ ' + msg;
+            lucide.createIcons();
         }
 
-        function setupSuccess(key) {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('error').classList.add('hidden');
-            document.getElementById('success').classList.remove('hidden');
-            document.getElementById('final-key-display').innerText = key;
-            
-            document.getElementById('copy-key').onclick = () => {
-                navigator.clipboard.writeText(key).then(() => {
-                    showToast('✓ Đã sao chép key!');
-                }).catch(() => showToast('Copy thất bại', 'error'));
+        function showSuccess(key) {
+            document.getElementById('view-loading').classList.add('hidden');
+            document.getElementById('view-error').classList.add('hidden');
+            document.getElementById('view-success').classList.remove('hidden');
+            document.getElementById('key-display').textContent = key;
+            lucide.createIcons();
+
+            // Copy button
+            document.getElementById('copy-key-btn').onclick = () => {
+                navigator.clipboard.writeText(key)
+                    .then(() => showToast('✓ Đã sao chép key!'))
+                    .catch(() => showToast('Copy thất bại', 'error'));
             };
 
-            // Countdown bắt đầu từ lúc validate thành công + 24h
+            // Countdown 24h từ lúc tải trang
             startCountdown(Date.now() + 24 * 60 * 60 * 1000);
         }
 
-        function startCountdown(expireTime) {
-            const countdownElement = document.getElementById('time-left');
-            const interval = setInterval(() => {
-                const now = Date.now();
-                const timeLeft = expireTime - now;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    countdownElement.innerText = '00:00:00';
-                    document.getElementById('final-key-display').innerText = '⏰ Key đã hết hạn!';
-                    document.getElementById('copy-key').disabled = true;
+        function startCountdown(expireAt) {
+            const el = document.getElementById('time-left');
+            function tick() {
+                const left = expireAt - Date.now();
+                if (left <= 0) {
+                    el.textContent = '00:00:00';
+                    el.classList.remove('text-green-400');
+                    el.classList.add('text-red-400');
+                    document.getElementById('key-display').textContent = '⏰ Key đã hết hạn!';
+                    document.getElementById('key-display').classList.add('error');
+                    document.getElementById('copy-key-btn').disabled = true;
                     showToast('Key đã hết hạn', 'error');
                     return;
                 }
-                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                countdownElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
-        }
-
-        async function loadKey() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const token = urlParams.get('token');
-
-                if (!token || token.length < 20) {
-                    showError('Link không hợp lệ hoặc token bị sai định dạng');
-                    return;
-                }
-
-                const res = await fetch(`/.netlify/functions/validate-key?token=${encodeURIComponent(token)}`);
-                
-                if (!res.ok) {
-                    throw new Error(`Lỗi server: ${res.status}`);
-                }
-
-                const data = await res.json();
-
-                if (!data.valid) {
-                    throw new Error(data.message || 'Token không hợp lệ, đã sử dụng hoặc hết hạn');
-                }
-
-                const key = data.key;
-                if (!key) {
-                    throw new Error('Server không trả về key hợp lệ');
-                }
-
-                setupSuccess(key);
-            } catch (error) {
-                console.error('Xác minh key thất bại:', error);
-                showError(error.message || 'Không thể xác minh key. Vui lòng thử lại hoặc liên hệ admin.');
+                const h = Math.floor(left / 3600000);
+                const m = Math.floor((left % 3600000) / 60000);
+                const s = Math.floor((left % 60000) / 1000);
+                el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                // Đổi màu khi còn ít thời gian
+                if (left < 3600000) { el.classList.remove('text-green-400'); el.classList.add('text-yellow-400'); }
+                if (left < 600000)  { el.classList.remove('text-yellow-400'); el.classList.add('text-red-400'); }
+                setTimeout(tick, 1000);
             }
+            tick();
         }
 
-        // Khởi chạy khi load trang
+        // ── Main: lấy key từ token ──
+        async function loadKey() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+
+            if (!token) {
+                showError('Link không hợp lệ', '❌ Thiếu token trong URL');
+                return;
+            }
+
+            // 1. Thử xác thực qua server
+            try {
+                const res = await fetch(`/.netlify/functions/validate-key?token=${encodeURIComponent(token)}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (!data.valid) throw new Error(data.message || 'Token không hợp lệ hoặc đã hết hạn');
+                showSuccess(data.key);
+                return;
+            } catch (serverErr) {
+                console.warn('Server validate failed, trying localStorage fallback...', serverErr);
+            }
+
+            // 2. Fallback: kiểm tra localStorage (offline mode)
+            const localKey = localStorage.getItem(`fallback_key_${token}`);
+            if (localKey) {
+                localStorage.removeItem(`fallback_key_${token}`);
+                showSuccess(localKey);
+                return;
+            }
+
+            // 3. Thất bại hoàn toàn
+            showError('Token không hợp lệ, đã sử dụng, hoặc hết hạn', '❌ Vui lòng quay lại trang đầu để lấy key mới.');
+        }
+
         loadKey();
     </script>
 </body>

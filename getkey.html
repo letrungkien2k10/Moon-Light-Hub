@@ -6,77 +6,124 @@
     <title>Get Key 24h - Moon Light Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://publisher.linkvertise.com/cdn/linkvertise.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* giữ nguyên style cũ */
         body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2.5rem; max-width: 600px; width: 95%; box-shadow: 0 0 40px rgba(102,126,234,0.3); }
-        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2.5rem; max-width: 600px; width: 95%; box-shadow: 0 0 40px rgba(102,126,234,0.3); position: relative; z-index: 1; }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .pulse-glow { animation: pulse-glow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
         @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(34,197,94,0.5); } 50% { box-shadow: 0 0 40px rgba(34,197,94,0.8); } }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
         .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
         @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }
+        .btn-main { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.25rem 2.5rem; border-radius: 9999px; background: linear-gradient(to right, #22c55e, #10b981); color: white; font-weight: 700; font-size: 1.125rem; transition: all 0.3s; cursor: pointer; border: none; width: 100%; }
+        .btn-main:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34,197,94,0.4); }
+        .btn-main:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+        .info-box { background: rgba(102,126,234,0.08); border: 1px solid rgba(102,126,234,0.2); border-radius: 1rem; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+        .recaptcha-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+        .recaptcha-wrap iframe { border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
     <div class="stars" id="stars"></div>
-    
+
     <div class="glass-card text-center">
         <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center pulse-glow">
             <i data-lucide="key" class="w-10 h-10 text-white"></i>
         </div>
 
-        <h1 class="text-4xl font-extrabold gradient-text mb-4">Moon Light Hub - Key 24h</h1>
+        <h1 class="text-4xl font-extrabold gradient-text mb-4">Moon Light Hub</h1>
+        <p class="text-lg text-gray-300 mb-3">Lấy Key miễn phí 24 giờ</p>
 
-        <p class="text-lg text-gray-300 mb-8">
-            Chào mừng bạn đến với Moon Light Hub!<br>
-            Để nhận key miễn phí, hãy hoàn thành nhiệm vụ Linkvertise trước.
-        </p>
+        <div class="info-box text-left text-sm text-gray-300 mb-6">
+            <p class="font-semibold text-indigo-300 mb-2">📋 Hướng dẫn:</p>
+            <ol class="list-decimal list-inside space-y-1 text-gray-400">
+                <li>Bấm nút bên dưới để vào trang Linkvertise</li>
+                <li>Hoàn thành các bước trên Linkvertise</li>
+                <li>Bạn sẽ tự động được chuyển về để lấy key</li>
+            </ol>
+        </div>
 
-        <button id="start-linkvertise" class="inline-block px-10 py-5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl transition-all">
-            <i data-lucide="external-link" class="w-6 h-6 inline mr-2"></i>
-            Bắt đầu nhiệm vụ Linkvertise
+        <!-- reCAPTCHA -->
+        <div class="recaptcha-wrap">
+            <div class="g-recaptcha"
+                data-sitekey="6LcGTZMsAAAANW3r_l60634QRh3d5rlsOGsiZRo"
+                data-callback="onCaptchaSuccess"
+                data-expired-callback="onCaptchaExpired"
+                data-theme="dark">
+            </div>
+        </div>
+
+        <button id="start-btn" class="btn-main" disabled>
+            <i data-lucide="external-link" class="w-6 h-6"></i>
+            Bắt đầu lấy Key
         </button>
 
-        <p class="text-sm text-gray-500 mt-8">
-            Sau khi hoàn thành, bạn sẽ được chuyển về bước tiếp theo tự động.
+        <p class="text-xs text-gray-500 mt-6">
+            ⚠️ Không tắt tab trong khi hoàn thành Linkvertise.<br>
+            Key có hiệu lực 24 giờ kể từ khi tạo.
         </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 60; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 4 + 's';
-                starsContainer.appendChild(star);
-            }
+        // reCAPTCHA callbacks
+        let captchaPassed = false;
+
+        function onCaptchaSuccess(token) {
+            captchaPassed = true;
+            document.getElementById('start-btn').disabled = false;
         }
-        createStars();
 
-        document.getElementById('start-linkvertise').addEventListener('click', async () => {
-            try {
-                // Không lưu token vào localStorage nữa
-                // Chỉ tạo token tạm để redirect (server sẽ xử lý)
-                const redirectUrl = `${window.location.origin}/getkey2.html`;
-                const lvUrl = `https://direct-link.net/4462018/EbAEdp0Kh1IM?redirect=${encodeURIComponent(redirectUrl)}`;
+        function onCaptchaExpired() {
+            captchaPassed = false;
+            document.getElementById('start-btn').disabled = true;
+        }
 
-                if (typeof linkvertise === 'function') {
-                    linkvertise(4462018, { whitelist: [], blacklist: [] });
-                }
-
-                window.location.href = lvUrl;
-            } catch (err) {
-                alert('Có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ admin.');
-                console.error(err);
+        // Tạo sao nền
+        (function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 60; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.style.left = Math.random() * 100 + '%';
+                s.style.top = Math.random() * 100 + '%';
+                s.style.animationDelay = Math.random() * 4 + 's';
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(s);
             }
+        })();
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            // Kiểm tra reCAPTCHA
+            if (!captchaPassed) {
+                alert('Vui lòng xác minh reCAPTCHA trước!');
+                return;
+            }
+
+            // Tạo token ngẫu nhiên
+            const token = (crypto.randomUUID ? crypto.randomUUID() : Array(32).fill(0).map(() => Math.random().toString(36)[2]).join(''));
+
+            // Xóa session cũ
+            localStorage.removeItem('lv_token');
+            localStorage.removeItem('lv_token_expire');
+            localStorage.removeItem('lv_verified');
+
+            // Lưu token vào localStorage trước khi redirect
+            localStorage.setItem('lv_token', token);
+            localStorage.setItem('lv_token_expire', Date.now() + 30 * 60 * 1000); // 30 phút để hoàn thành
+            localStorage.setItem('visited_getkey', 'true');
+
+            // URL getkey2.html sẽ nhận token qua query param khi Linkvertise redirect về
+            const redirectUrl = `${window.location.origin}/getkey2.html?token=${encodeURIComponent(token)}`;
+
+            // Chuyển đến Linkvertise với redirect về getkey2 kèm token
+            // Thay YOUR_LINKVERTISE_ID và YOUR_LINK_ID bằng ID thật của bạn
+            const lvUrl = `https://direct-link.net/4462018/EbAEdp0Kh1IM?redirect=${encodeURIComponent(redirectUrl)}`;
+
+            window.location.href = lvUrl;
         });
     </script>
 </body>

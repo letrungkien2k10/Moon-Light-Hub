@@ -3,319 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Key 24h - Moon Light Hub</title>
+    <title>Nhiệm vụ - Moon Light Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2.5rem; max-width: 600px; width: 95%; box-shadow: 0 0 40px rgba(102,126,234,0.3); }
-        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .pulse-glow { animation: pulse-glow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
-        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(34,197,94,0.5); } 50% { box-shadow: 0 0 40px rgba(34,197,94,0.8); } }
-        #key-link { background: #00000099; border-radius: 1rem; padding: 1.2rem; font-family: monospace; font-size: 1.4rem; word-break: break-all; user-select: all; }
-        .hidden { display: none !important; }
-        .disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
-        .toast { position: fixed; top: 1rem; right: 1rem; background: rgba(30,30,50,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(102,126,234,0.3); border-radius: 0.75rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; min-width: 320px; transform: translateX(120%); opacity: 0; transition: all 0.4s ease; z-index: 9999; }
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast-success { border-color: #4ade80; color: #4ade80; }
-        .toast-error { border-color: #ef4444; color: #f87171; }
-        .toast-info { border-color: #818cf8; color: #818cf8; }
-        .loader { width: 20px; height: 20px; border: 2px solid rgba(102,126,234,0.3); border-top-color: #667eea; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .step-indicator { display: inline-block; width: 36px; height: 36px; border-radius: 50%; background: rgba(102,126,234,0.1); border: 2px solid rgba(102,126,234,0.3); display: flex; align-items: center; justify-content: center; }
-        .step-indicator.active { background: rgba(34,197,94,0.2); border-color: #4ade80; color: #4ade80; }
-        .step-indicator.completed { background: rgba(34,197,94,0.3); border-color: #22c55e; color: #22c55e; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2rem; max-width: 600px; width: 100%; box-shadow: 0 0 40px rgba(102,126,234,0.3); position: relative; z-index: 1; }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
         .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
         @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }
+        .hidden { display: none !important; }
+        .step-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.25rem; }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem 1.5rem; border-radius: 9999px; font-weight: 700; font-size: 1rem; transition: all 0.25s; cursor: pointer; border: none; width: 100%; }
+        .btn-action:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+        .btn-action:not(:disabled):hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-green { background: linear-gradient(to right, #22c55e, #10b981); color: white; }
+        .btn-pink { background: linear-gradient(to right, #ec4899, #db2777); color: white; }
+        .btn-red { background: linear-gradient(to right, #ef4444, #dc2626); color: white; }
+        .btn-indigo { background: linear-gradient(to right, #6366f1, #4f46e5); color: white; }
+        .btn-purple { background: linear-gradient(to right, #a855f7, #9333ea); color: white; }
+        .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .toast { position: fixed; top: 1rem; right: 1rem; background: rgba(18,24,45,0.95); backdrop-filter: blur(8px); border-radius: 0.75rem; padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 0.6rem; min-width: 280px; transform: translateX(120%); opacity: 0; transition: all 0.35s ease; z-index: 9999; border: 1px solid rgba(102,126,234,0.3); }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast-success { color: #4ade80; border-color: #4ade80; }
+        .toast-error { color: #f87171; border-color: #f87171; }
+        .loader { width: 20px; height: 20px; border: 2.5px solid rgba(102,126,234,0.3); border-top-color: #667eea; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; flex-shrink: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .key-link-box { background: rgba(0,0,0,0.5); border: 1px dashed rgba(100,200,100,0.4); border-radius: 0.75rem; padding: 1rem; font-family: monospace; font-size: 0.85rem; word-break: break-all; color: #86efac; }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 9999px; overflow: hidden; margin-bottom: 1.5rem; }
+        .progress-fill { height: 100%; background: linear-gradient(to right, #667eea, #22c55e); border-radius: 9999px; transition: width 0.5s ease; }
+        .recaptcha-wrap { display: flex; justify-content: center; margin: 1rem 0 0.75rem; }
+        .recaptcha-wrap iframe { border-radius: 8px; }
     </style>
 </head>
 <body>
     <div class="stars" id="stars"></div>
-    
-    <div class="glass-card text-center">
-        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center pulse-glow">
-            <i data-lucide="key" class="w-10 h-10 text-white"></i>
+
+    <!-- Trạng thái lỗi truy cập -->
+    <div id="access-denied" class="glass-card text-center hidden">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+            <i data-lucide="shield-x" class="w-8 h-8 text-red-400"></i>
         </div>
-        
-        <h1 class="text-4xl font-extrabold gradient-text mb-4">Moon Light Hub - Key 24h</h1>
-        
-        <p class="text-lg text-gray-300 mb-8" id="status-text">Bạn đã vượt link4m thành công!<br>Bây giờ hoàn thành các nhiệm vụ social để tiếp tục.</p>
-        
-        <!-- Bước 1: Follow TikTok -->
-        <div id="tiktok-step" class="mb-10 space-y-6">
-            <div class="bg-pink-500/10 border border-pink-500/30 rounded-lg p-4 mb-6">
-                <p class="text-pink-300 text-sm font-semibold">🎵 Bước 1: Follow TikTok Channel</p>
+        <h2 class="text-2xl font-bold text-red-400 mb-3">Truy cập không hợp lệ</h2>
+        <p class="text-gray-400 mb-6">Bạn phải hoàn thành Linkvertise trước. Token không hợp lệ hoặc đã hết hạn (30 phút).</p>
+        <a href="/getkey.html" class="btn-action btn-indigo" style="display:inline-flex;width:auto;padding:0.75rem 2rem;">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            Quay lại trang đầu
+        </a>
+    </div>
+
+    <!-- Main flow -->
+    <div id="main-flow" class="glass-card hidden">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold gradient-text mb-1">Moon Light Hub</h1>
+            <p id="status-text" class="text-gray-400 text-sm">Hoàn thành nhiệm vụ để nhận key</p>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+
+        <!-- BƯỚC 1: TikTok -->
+        <div id="step-tiktok" class="step-box mb-4">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="badge" style="background:rgba(236,72,153,0.15);color:#f472b6;border:1px solid rgba(236,72,153,0.3)">
+                    🎵 Bước 1 / 3
+                </span>
+                <span class="text-sm text-gray-300 font-semibold">Follow TikTok</span>
             </div>
-            
-            <div class="flex items-start gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
-                <div class="step-indicator active flex-shrink-0">1</div>
-                <div class="flex-1">
-                    <p class="text-gray-200 font-semibold mb-2">Follow Moon Light Hub trên TikTok</p>
-                    <a href="https://www.tiktok.com/@moonlighthubofficial" target="_blank" class="tiktok-link inline-block px-6 py-2 rounded-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold transition-all transform hover:scale-105">
-                        <i data-lucide="external-link" class="w-4 h-4 inline mr-1"></i>Follow TikTok
-                    </a>
-                </div>
-            </div>
-            
-            <button id="confirm-tiktok" class="mt-4 w-full px-10 py-3 rounded-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 disabled" disabled>
+            <p class="text-gray-400 text-sm mb-4">Follow kênh TikTok Moon Light Hub để tiếp tục.</p>
+            <a href="https://tiktok.com/@moonlight.hub" target="_blank" class="btn-action btn-pink mb-3" style="display:flex">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+                Mở TikTok để Follow
+            </a>
+            <button id="confirm-tiktok" class="btn-action btn-green">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã follow TikTok (đang chờ xác nhận)
+                Tôi đã Follow TikTok ✓
             </button>
         </div>
-        
-        <!-- Bước 2: Subscribe YouTube -->
-        <div id="youtube-step" class="mb-10 space-y-6 hidden">
-            <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-                <p class="text-red-300 text-sm font-semibold">📺 Bước 2: Subscribe YouTube Channel</p>
+
+        <!-- BƯỚC 2: YouTube -->
+        <div id="step-youtube" class="step-box mb-4 hidden">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)">
+                    📺 Bước 2 / 3
+                </span>
+                <span class="text-sm text-gray-300 font-semibold">Subscribe YouTube</span>
             </div>
-            
-            <div class="flex items-start gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
-                <div class="step-indicator active flex-shrink-0">2</div>
-                <div class="flex-1">
-                    <p class="text-gray-200 font-semibold mb-2">Subscribe Moon Light Hub trên YouTube</p>
-                    <a href="https://www.youtube.com/@moonlighthubofficial" target="_blank" class="youtube-link inline-block px-6 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-all transform hover:scale-105">
-                        <i data-lucide="external-link" class="w-4 h-4 inline mr-1"></i>Subscribe YouTube
-                    </a>
-                </div>
-            </div>
-            
-            <button id="confirm-youtube" class="mt-4 w-full px-10 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 disabled" disabled>
+            <p class="text-gray-400 text-sm mb-4">Subscribe kênh YouTube Moon Light Hub.</p>
+            <a href="https://youtube.com/@moonlight.hub" target="_blank" class="btn-action btn-red mb-3" style="display:flex">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+                Mở YouTube để Subscribe
+            </a>
+            <button id="confirm-youtube" class="btn-action btn-green">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã subscribe YouTube (đang chờ xác nhận)
+                Tôi đã Subscribe YouTube ✓
             </button>
         </div>
-        
-        <!-- Bước 3: Join 2 server Discord -->
-        <div id="join-step" class="mb-10 space-y-6 hidden">
-            <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
-                <p class="text-blue-300 text-sm font-semibold">⏳ Bước 3: Join 2 Discord Servers</p>
+
+        <!-- BƯỚC 3: Discord -->
+        <div id="step-discord" class="step-box mb-4 hidden">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="badge" style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3)">
+                    💬 Bước 3 / 3
+                </span>
+                <span class="text-sm text-gray-300 font-semibold">Join 2 Discord Server</span>
             </div>
-            
-            <div class="flex flex-col gap-4">
-                <div class="flex items-start gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
-                    <div class="step-indicator active flex-shrink-0">3.1</div>
-                    <div class="flex-1">
-                        <p class="text-gray-200 font-semibold mb-2">Join Server Chính Moon Light Hub</p>
-                        <a href="https://discord.gg/moonlighthub" target="_blank" class="discord1-link inline-block px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all transform hover:scale-105">
-                            <i data-lucide="external-link" class="w-4 h-4 inline mr-1"></i>Join Server 1
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="flex items-start gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
-                    <div class="step-indicator active flex-shrink-0">3.2</div>
-                    <div class="flex-1">
-                        <p class="text-gray-200 font-semibold mb-2">Join Server Update & Script</p>
-                        <a href="https://discord.gg/moonlightscript" target="_blank" class="discord2-link inline-block px-6 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all transform hover:scale-105">
-                            <i data-lucide="external-link" class="w-4 h-4 inline mr-1"></i>Join Server 2
-                        </a>
-                    </div>
+            <p class="text-gray-400 text-sm mb-4">Join cả 2 server Discord của Moon Light Hub.</p>
+            <a href="https://discord.gg/79YqazgE6C" target="_blank" id="discord-link-1" class="btn-action btn-indigo mb-3" style="display:flex">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+                Join Server 1
+            </a>
+            <a href="https://discord.gg/3bS7hjJ9es" target="_blank" id="discord-link-2" class="btn-action btn-purple mb-3" style="display:flex">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+                Join Server 2
+            </a>
+            <!-- reCAPTCHA xác minh trước khi lấy key -->
+            <div class="recaptcha-wrap">
+                <div class="g-recaptcha"
+                    data-sitekey="6LcGTZMsAAAANW3r_l60634QRh3d5rlsOGsiZRo"
+                    data-callback="onCaptchaSuccess2"
+                    data-expired-callback="onCaptchaExpired2"
+                    data-theme="dark">
                 </div>
             </div>
-            
-            <button id="confirm-join" class="mt-4 w-full px-10 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 disabled" disabled>
+            <button id="confirm-discord" class="btn-action btn-green" disabled>
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã join cả 2 server (đang chờ xác nhận)
+                Tôi đã join cả 2 server ✓
             </button>
+            <p class="text-xs text-gray-500 mt-2 text-center">Bấm cả 2 link Join + xác minh reCAPTCHA để tiếp tục</p>
         </div>
-        
-        <!-- Phần tạo key -->
-        <div id="create-section" class="hidden mt-10">
-            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-6 mb-6">
-                <p class="text-green-300 text-lg font-semibold">Hoàn thành tất cả nhiệm vụ! Nhận key ngay</p>
+
+        <!-- KẾT QUẢ: Tạo key -->
+        <div id="step-result" class="hidden">
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <i data-lucide="party-popper" class="w-7 h-7 text-green-400"></i>
+                </div>
+                <p class="text-green-400 font-bold text-lg">Hoàn thành tất cả nhiệm vụ!</p>
+                <p class="text-gray-400 text-sm mt-1">Đang tạo link key của bạn...</p>
             </div>
-            
-            <button id="create-key-btn" class="w-full px-10 py-5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xl transition-all transform hover:scale-105">
-                <i data-lucide="key" class="w-6 h-6 inline mr-2"></i>
-                Tạo Link Key 24h
-            </button>
-            
-            <div id="final-key" class="hidden mt-8">
-                <p class="text-lg text-gray-300 mb-4">Link key của bạn (chỉ dùng 1 lần):</p>
-                <div id="key-link" class="text-green-400 font-mono break-all p-4 bg-black/40 rounded-xl"></div>
-                
-                <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                    <button id="copy-final" class="flex-1 px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="copy" class="w-5 h-5"></i> Copy Link
+
+            <!-- Trạng thái loading -->
+            <div id="result-loading" class="step-box text-center">
+                <div class="loader mx-auto mb-3"></div>
+                <p class="text-gray-400 text-sm">Đang kết nối server và tạo key...</p>
+            </div>
+
+            <!-- Key link thành công -->
+            <div id="result-success" class="hidden">
+                <p class="text-green-400 text-sm font-semibold mb-2 flex items-center gap-2">
+                    <i data-lucide="link" class="w-4 h-4"></i>
+                    Link key của bạn (chỉ dùng 1 lần):
+                </p>
+                <div id="key-link-display" class="key-link-box mb-4"></div>
+                <div class="flex gap-3">
+                    <button id="copy-link-btn" class="btn-action btn-green flex-1">
+                        <i data-lucide="copy" class="w-5 h-5"></i>
+                        Copy Link
                     </button>
-                    <button id="open-final" class="flex-1 px-8 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="external-link" class="w-5 h-5"></i> Mở Link
+                    <button id="open-link-btn" class="btn-action btn-indigo flex-1">
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                        Mở Link
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">
+                    ⚠️ Mỗi lần tạo sẽ ra link khác nhau — không chia sẻ link này!
+                </p>
+            </div>
+
+            <!-- Lỗi server -->
+            <div id="result-error" class="hidden step-box text-center">
+                <i data-lucide="wifi-off" class="w-8 h-8 text-orange-400 mx-auto mb-2"></i>
+                <p class="text-orange-400 font-semibold mb-1">Không kết nối được server</p>
+                <p class="text-gray-400 text-sm mb-4">Đang dùng chế độ offline. Link key vẫn hoạt động.</p>
+                <div id="key-link-display-fallback" class="key-link-box mb-4"></div>
+                <div class="flex gap-3">
+                    <button id="copy-link-btn-fallback" class="btn-action btn-green flex-1">
+                        <i data-lucide="copy" class="w-5 h-5"></i>
+                        Copy Link
+                    </button>
+                    <button id="open-link-btn-fallback" class="btn-action btn-indigo flex-1">
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                        Mở Link
                     </button>
                 </div>
             </div>
         </div>
+
+        <p class="text-xs text-gray-600 mt-6 text-center">
+            Moon Light Hub © 2024 | Key hệ thống xác thực qua token một lần
+        </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                starsContainer.appendChild(star);
+        // Tạo sao nền
+        (function() {
+            const c = document.getElementById('stars');
+            for (let i = 0; i < 55; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${Math.random()*3+2}s`;
+                c.appendChild(s);
             }
-        }
-        createStars();
+        })();
 
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type} show`;
-            toast.innerHTML = `<span>${message}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+        function showToast(msg, type = 'success') {
+            const t = document.createElement('div');
+            t.className = `toast toast-${type} show`;
+            t.innerHTML = `<span>${msg}</span>`;
+            document.body.appendChild(t);
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
         }
 
-        // Thời gian chờ tối thiểu sau khi mở link (giây)
-        const MIN_WAIT = 10;
+        // ── Xác thực token từ URL ──
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get('token');
+        const storedToken = localStorage.getItem('lv_token');
+        const tokenExpire = parseInt(localStorage.getItem('lv_token_expire') || '0');
+        const visitedGetkey = localStorage.getItem('visited_getkey') === 'true';
 
-        let tiktokOpenedAt = 0;
-        let youtubeOpenedAt = 0;
-        let discord1OpenedAt = 0;
-        let discord2OpenedAt = 0;
+        const isValid = (
+            visitedGetkey &&
+            tokenFromUrl &&
+            storedToken &&
+            tokenFromUrl === storedToken &&
+            Date.now() < tokenExpire
+        );
 
-        function updateConfirmButtons() {
-            const now = Date.now();
+        if (!isValid) {
+            document.getElementById('access-denied').classList.remove('hidden');
+            lucide.createIcons();
+        } else {
+            // Token hợp lệ — xóa khỏi storage để không dùng lại
+            localStorage.removeItem('lv_token');
+            localStorage.removeItem('lv_token_expire');
+            document.getElementById('main-flow').classList.remove('hidden');
+            lucide.createIcons();
+            startFlow();
+        }
 
-            const tiktokBtn = document.getElementById('confirm-tiktok');
-            if (tiktokOpenedAt && (now - tiktokOpenedAt >= MIN_WAIT * 1000)) {
-                tiktokBtn.disabled = false;
-                tiktokBtn.classList.remove('disabled');
-                tiktokBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Tôi đã follow TikTok';
-            }
+        // ── Flow nhiệm vụ ──
+        let tiktokDone = false, youtubeDone = false, d1Clicked = false, d2Clicked = false, captcha2Passed = false;
 
-            const youtubeBtn = document.getElementById('confirm-youtube');
-            if (youtubeOpenedAt && (now - youtubeOpenedAt >= MIN_WAIT * 1000)) {
-                youtubeBtn.disabled = false;
-                youtubeBtn.classList.remove('disabled');
-                youtubeBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Tôi đã subscribe YouTube';
-            }
+        // reCAPTCHA callbacks (step Discord)
+        function onCaptchaSuccess2(token) {
+            captcha2Passed = true;
+            checkDiscordReady();
+        }
+        function onCaptchaExpired2() {
+            captcha2Passed = false;
+            document.getElementById('confirm-discord').disabled = true;
+        }
 
-            const joinBtn = document.getElementById('confirm-join');
-            if (discord1OpenedAt && discord2OpenedAt &&
-                (now - discord1OpenedAt >= MIN_WAIT * 1000) &&
-                (now - discord2OpenedAt >= MIN_WAIT * 1000)) {
-                joinBtn.disabled = false;
-                joinBtn.classList.remove('disabled');
-                joinBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Tôi đã join cả 2 server';
+        function updateProgress(percent) {
+            document.getElementById('progress-fill').style.width = percent + '%';
+        }
+
+        function setStatus(text) {
+            document.getElementById('status-text').textContent = text;
+        }
+
+        function startFlow() {
+            updateProgress(10);
+            setStatus('Bước 1/3: Follow TikTok để tiếp tục');
+        }
+
+        // Bước 1: TikTok
+        document.getElementById('confirm-tiktok').addEventListener('click', () => {
+            tiktokDone = true;
+            document.getElementById('step-tiktok').classList.add('hidden');
+            document.getElementById('step-youtube').classList.remove('hidden');
+            lucide.createIcons();
+            updateProgress(35);
+            setStatus('Bước 2/3: Subscribe YouTube');
+            showToast('✓ Đã follow TikTok!');
+        });
+
+        // Bước 2: YouTube
+        document.getElementById('confirm-youtube').addEventListener('click', () => {
+            youtubeDone = true;
+            document.getElementById('step-youtube').classList.add('hidden');
+            document.getElementById('step-discord').classList.remove('hidden');
+            lucide.createIcons();
+            updateProgress(60);
+            setStatus('Bước 3/3: Join 2 Discord server');
+            showToast('✓ Đã subscribe YouTube!');
+        });
+
+        // Bước 3: Discord — theo dõi click từng link
+        document.getElementById('discord-link-1').addEventListener('click', () => {
+            d1Clicked = true;
+            checkDiscordReady();
+        });
+        document.getElementById('discord-link-2').addEventListener('click', () => {
+            d2Clicked = true;
+            checkDiscordReady();
+        });
+
+        function checkDiscordReady() {
+            if (d1Clicked && d2Clicked && captcha2Passed) {
+                document.getElementById('confirm-discord').disabled = false;
             }
         }
 
-        // TikTok
-        document.querySelector('.tiktok-link')?.addEventListener('click', () => {
-            tiktokOpenedAt = Date.now();
-            showToast('Đã mở TikTok. Chờ ít nhất 10 giây để xác nhận...', 'info');
+        document.getElementById('confirm-discord').addEventListener('click', () => {
+            document.getElementById('step-discord').classList.add('hidden');
+            document.getElementById('step-result').classList.remove('hidden');
+            lucide.createIcons();
+            updateProgress(85);
+            setStatus('Đang tạo key...');
+            showToast('✓ Đã join cả 2 server!');
+            createKey();
         });
 
-        document.getElementById('confirm-tiktok')?.addEventListener('click', () => {
-            if (document.getElementById('confirm-tiktok').disabled) return;
-            document.getElementById('tiktok-step').classList.add('hidden');
-            document.getElementById('youtube-step').classList.remove('hidden');
-            showToast('✓ Đã xác nhận follow TikTok!', 'success');
-        });
-
-        // YouTube
-        document.querySelector('.youtube-link')?.addEventListener('click', () => {
-            youtubeOpenedAt = Date.now();
-            showToast('Đã mở YouTube. Chờ ít nhất 10 giây để xác nhận...', 'info');
-        });
-
-        document.getElementById('confirm-youtube')?.addEventListener('click', () => {
-            if (document.getElementById('confirm-youtube').disabled) return;
-            document.getElementById('youtube-step').classList.add('hidden');
-            document.getElementById('join-step').classList.remove('hidden');
-            showToast('✓ Đã xác nhận subscribe YouTube!', 'success');
-        });
-
-        // Discord
-        document.querySelector('.discord1-link')?.addEventListener('click', () => {
-            discord1OpenedAt = Date.now();
-            showToast('Đã mở Server 1. Chờ ít nhất 10 giây...', 'info');
-            updateConfirmButtons();
-        });
-
-        document.querySelector('.discord2-link')?.addEventListener('click', () => {
-            discord2OpenedAt = Date.now();
-            showToast('Đã mở Server 2. Chờ ít nhất 10 giây...', 'info');
-            updateConfirmButtons();
-        });
-
-        document.getElementById('confirm-join')?.addEventListener('click', () => {
-            if (document.getElementById('confirm-join').disabled) return;
-            document.getElementById('join-step').classList.add('hidden');
-            document.getElementById('create-section').classList.remove('hidden');
-            showToast('✓ Đã hoàn thành tất cả nhiệm vụ! Tạo key ngay nào 🌙', 'success');
-        });
-
-        // Tạo key (gọi Netlify function)
-        document.getElementById('create-key-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('create-key-btn');
-            const original = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span> Đang tạo key...';
-
+        // ── Tạo key qua server ──
+        async function createKey() {
             try {
                 const res = await fetch('/.netlify/functions/get-key', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ source: 'social_complete' })
+                    body: JSON.stringify({ source: 'getkey2' })
                 });
 
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.error || 'Server error');
-                }
-
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (!data.token) throw new Error('Không nhận được token');
+                if (!data.token) throw new Error('Không nhận được token từ server');
 
                 const link = `${window.location.origin}/final-key.html?token=${encodeURIComponent(data.token)}`;
-                document.getElementById('key-link').textContent = link;
-                document.getElementById('final-key').classList.remove('hidden');
-                showToast('Đã tạo link key thành công!', 'success');
+                showSuccess(link, data.key);
             } catch (err) {
-                showToast('Lỗi khi tạo key: ' + (err.message || 'Vui lòng thử lại'), 'error');
-                console.error(err);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = original;
+                console.warn('Server error, using fallback:', err);
+                createKeyFallback();
             }
-        });
+        }
 
-        // Copy link
-        document.getElementById('copy-final')?.addEventListener('click', () => {
-            const text = document.getElementById('key-link').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('Đã copy link key!', 'success');
-            }).catch(() => {
-                showToast('Copy thất bại, bạn tự chọn và copy nhé', 'error');
-            });
-        });
+        function showSuccess(link, key) {
+            document.getElementById('result-loading').classList.add('hidden');
+            document.getElementById('result-success').classList.remove('hidden');
+            lucide.createIcons();
+            document.getElementById('key-link-display').textContent = link;
+            updateProgress(100);
+            setStatus('✅ Key đã sẵn sàng!');
 
-        // Mở link
-        document.getElementById('open-final')?.addEventListener('click', () => {
-            const text = document.getElementById('key-link').textContent;
-            if (text) window.open(text, '_blank');
-        });
+            document.getElementById('copy-link-btn').onclick = () => {
+                navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));
+            };
+            document.getElementById('open-link-btn').onclick = () => window.open(link, '_blank');
+        }
 
-        // Update nút confirm mỗi giây
-        setInterval(updateConfirmButtons, 1000);
+        function createKeyFallback() {
+            // Fallback: tạo key local + token local
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yy = today.getFullYear().toString().slice(-2);
+            const rand = Array(8).fill(0).map(() => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*62)]).join('');
+            const fallbackKey = `moonlight-${dd}${mm}${yy}-${rand}`;
+            const fallbackToken = Array(28).fill(0).map(() => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*62)]).join('');
 
-        // Nếu vào thẳng mà chưa qua getkey → redirect
-        window.addEventListener('load', () => {
-            if (!document.referrer.includes('getkey.html') && !document.referrer.includes('linkvertise')) {
-                showToast('Vui lòng bắt đầu từ trang Get Key đầu tiên!', 'error');
-                setTimeout(() => {
-                    window.location.href = '/getkey.html';
-                }, 2500);
-            }
-        });
+            localStorage.setItem(`fallback_key_${fallbackToken}`, fallbackKey);
+            const link = `${window.location.origin}/final-key.html?token=${encodeURIComponent(fallbackToken)}`;
+
+            document.getElementById('result-loading').classList.add('hidden');
+            document.getElementById('result-error').classList.remove('hidden');
+            lucide.createIcons();
+            document.getElementById('key-link-display-fallback').textContent = link;
+            updateProgress(100);
+            setStatus('⚠️ Offline mode — key vẫn hoạt động');
+
+            document.getElementById('copy-link-btn-fallback').onclick = () => {
+                navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));
+            };
+            document.getElementById('open-link-btn-fallback').onclick = () => window.open(link, '_blank');
+        }
     </script>
 </body>
 </html>
