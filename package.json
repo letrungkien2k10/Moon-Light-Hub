@@ -1,0 +1,8 @@
+{
+  "name": "moonlighthub",
+  "version": "1.0.0",
+  "description": "Moon Light Hub key system",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
