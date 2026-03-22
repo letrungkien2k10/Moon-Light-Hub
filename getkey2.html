@@ -123,8 +123,9 @@
         
         <!-- Phần Create Key (ẩn ban đầu) -->
         <div id="create-section" class="hidden">
-            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 mb-6">
-                <p class="text-emerald-300 text-sm font-semibold flex items-center gap-2">
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-6 mb-6 text-center">
+                <img src="checked.png" alt="Completed" class="w-16 h-16 mx-auto mb-4 inline-block">
+                <p class="text-emerald-300 text-sm font-semibold flex items-center justify-center gap-2">
                     <i data-lucide="check-circle-2" class="w-5 h-5"></i>
                     Hoàn thành! Bấm để tạo link key unique của bạn
                 </p>
@@ -377,18 +378,33 @@
             });
         }
 
-        // Nếu redirect từ link4sub
+        // Nếu redirect từ link4sub / linkvertise
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
-            const storedToken = localStorage.getItem('link4m_token');
+            const storedToken = localStorage.getItem('linkvertise_token');
+            const visitedGetkey = localStorage.getItem('visited_getkey') === 'true';
 
-            if (token && token === storedToken) {
-                localStorage.removeItem('link4m_token');
-                document.getElementById('status-text').innerText = 'Quay về thành công từ link4m! Bắt đầu nhiệm vụ social nhé.';
-            } else if (token) {
-                document.getElementById('status-text').innerText = 'Link không hợp lệ hoặc đã dùng!';
+            // Bắt buộc phải qua getkey trước
+            if (!visitedGetkey) {
+                window.location.href = 'getkey.html';
+                return;
             }
+
+            // Chưa hoàn thành vòng linkvertise
+            if (!token || token !== storedToken) {
+                document.getElementById('status-text').innerText = 'Bạn chưa hoàn thành Linkvertise hoặc token không hợp lệ. Quay lại getkey để làm đúng nhé.';
+                document.getElementById('tiktok-step').classList.add('hidden');
+                document.getElementById('youtube-step').classList.add('hidden');
+                document.getElementById('join-step').classList.add('hidden');
+                document.getElementById('create-section').classList.add('hidden');
+                return;
+            }
+
+            // Xác thực thành công, tiếp tục flow social
+            localStorage.removeItem('linkvertise_token');
+            localStorage.setItem('linkvertise_verified', 'true');
+            document.getElementById('status-text').innerText = 'Đã xác thực Linkvertise thành công. Bắt đầu nhiệm vụ social nhé.';
         });
     </script>
 </body>

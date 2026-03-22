@@ -8,20 +8,55 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family:'Inter',sans-serif; background:linear-gradient(140deg,#070b1b 0%,#0f1731 40%,#131b31 100%); color:#e8eafc; }
-    .card { background:rgba(20,32,66,.72); border:1px solid rgba(100,139,255,.24); backdrop-filter:blur(10px); border-radius:16px; }
-    .glass { box-shadow:0 10px 30px rgba(0,0,0,.4); }
+    body {
+      font-family:'Inter',sans-serif;
+      background-image: url('moonlight.gif');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color:#e8eafc;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 17, 30, 0.55); /* lớp đen trong suốt vừa đủ */
+      backdrop-filter: blur(4px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      background: rgba(12, 25, 58, 0.68);
+      border: 1px solid rgba(120, 164, 255, 0.28);
+      backdrop-filter: blur(14px);
+      border-radius: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
     .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
     .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
     @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }
+
+    header h1 { color: #f8fbff; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5); }
+    header p { color: #cbd3ea; }
+    #logout-btn { background: rgba(255, 88, 117, 0.9); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 16px rgba(0,0,0,0.36); backdrop-filter: blur(6px); }
+    #logout-btn:hover { background: rgba(255, 87, 111, 1); }
   </style>
 </head>
 <body>
   <!-- Stars Background -->
   <div class="stars" id="stars"></div>
   
-  <div class="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6">
-    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <div class="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6" style="position:relative; z-index:1;">
+    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" style="position:relative; z-index:2; background: rgba(4, 12, 35, 0.35); backdrop-filter: blur(8px); border-radius: 14px; padding: 0.75rem;">
       <div>
         <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Moon Light Hub Manager</h1>
         <p class="text-xs text-slate-300 mt-1">Quản lý key, time-to-live và key dashboard</p>
@@ -41,7 +76,7 @@
     <div id="dashboard" class="hidden space-y-5">
       <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <article class="card p-5 glass">
-          <h3 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Trạng thái tool</h3>
+          <h3 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Trạng thái Script</Script></h3>
           <p class="text-4xl font-extrabold">Online</p>
           <p class="text-xs text-slate-400 mt-1">Last: <span id="last-time">-</span></p>
         </article>
@@ -74,6 +109,24 @@
       <section class="card glass p-5">
         <h3 class="text-lg font-bold mb-4">Danh sách key (hết hạn tự xóa)</h3>
         <div id="keys-list" class="space-y-2"></div>
+      </section>
+
+      <section class="card glass p-5">
+        <h3 class="text-lg font-bold mb-4">Upload Script Mới</h3>
+        <div class="space-y-3">
+          <input id="script-name" type="text" placeholder="Tên script" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white" />
+          <select id="script-category" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white">
+            <option value="autofarm">AutoFarm</option>
+            <option value="combat">Combat</option>
+            <option value="utility">Utility</option>
+            <option value="esp">ESP</option>
+            <option value="teleport">Teleport</option>
+          </select>
+          <textarea id="script-code" placeholder="Nhập code script (Lua/JavaScript)..." class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white h-32 font-mono text-xs"></textarea>
+          <input id="script-desc" type="text" placeholder="Mô tả script" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white" />
+          <button id="upload-script" class="w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Upload Script</button>
+        </div>
+        <div id="upload-msg" class="mt-3 text-xs text-green-400 hidden"></div>
       </section>
     </div>
   </div>
@@ -200,6 +253,43 @@
       saveKeys(keys);
       document.getElementById('new-key').value = '';
       renderKeys();
+    });
+
+    // Upload Script Handler
+    document.getElementById('upload-script').addEventListener('click', () => {
+      const name = document.getElementById('script-name').value.trim();
+      const category = document.getElementById('script-category').value;
+      const code = document.getElementById('script-code').value.trim();
+      const desc = document.getElementById('script-desc').value.trim();
+
+      if (!name || !code) {
+        alert('Nhập tên script và code!');
+        return;
+      }
+
+      const scripts = JSON.parse(localStorage.getItem('uploaded_scripts') || '[]');
+      scripts.push({
+        id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+        name,
+        category,
+        code,
+        desc,
+        downloads: Math.floor(Math.random() * 5000),
+        status: 'Hoạt động',
+        uploadedAt: new Date().toLocaleString('vi-VN')
+      });
+      localStorage.setItem('uploaded_scripts', JSON.stringify(scripts));
+
+      // Clear form
+      document.getElementById('script-name').value = '';
+      document.getElementById('script-code').value = '';
+      document.getElementById('script-desc').value = '';
+
+      // Show success message
+      const msg = document.getElementById('upload-msg');
+      msg.innerText = '✓ Upload script thành công!';
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 3000);
     });
 
     // Auto-update remaining time every 5 seconds (was 1s, now optimized)

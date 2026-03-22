@@ -155,7 +155,7 @@
             letter-spacing: 0.5px;
         }
         .tag-autofarm { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-        .tag-combat { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .tag-auto-bounty { background: rgba(239, 68, 68, 0.2); color: #f87171; }
         .tag-utility { background: rgba(102, 126, 234, 0.2); color: #818cf8; }
         .tag-esp { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
         .tag-teleport { background: rgba(234, 179, 8, 0.2); color: #facc15; }
@@ -221,13 +221,18 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative z-10 pt-20 pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="floating inline-block mb-6">
-                <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-500 flex items-center justify-center glow-effect pulse-glow">
-                    <i data-lucide="sparkles" class="w-12 h-12 text-white"></i>
+    <section id="home" class="relative overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="moonlight.gif" alt="Moon Light background" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        </div>
+        <div class="relative z-10 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto text-center w-full">
+                <div class="floating inline-block mb-6">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-500 flex items-center justify-center glow-effect pulse-glow overflow-hidden">
+                        <img src="moonlight.png" alt="Moon Light Hub" class="w-20 h-20 object-contain">
+                    </div>
                 </div>
-            </div>
             <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
                 <span class="gradient-text">Moon Light Hub</span>
             </h1>
@@ -280,13 +285,14 @@
 
             <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 <!-- Server 1 -->
-                <div class="glass-card rounded-3xl p-8 hover-scale relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10">
+                <div class="glass-card rounded-3xl overflow-hidden hover-scale relative group">
+                    <img src="moonlight.gif" alt="Server 1 banner" class="w-full h-48 object-cover" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <div class="relative z-10 p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg shadow-indigo-500/30">
-                                    1
+                                <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg shadow-indigo-500/30">
+                                    <img src="moonlight.png" alt="Moon Light" class="w-full h-full object-cover" />
                                 </div>
                                 <div>
                                     <h3 class="text-2xl font-bold text-white">Moon Light Hub True 1</h3>
@@ -298,11 +304,9 @@
                             </div>
                             <i data-lucide="crown" class="w-6 h-6 text-yellow-500"></i>
                         </div>
-                        
                         <p class="text-gray-300 mb-6 leading-relaxed">
                             Server chính thức đầu tiên của cộng đồng. Nơi tụ họp của những thành viên nòng cốt và hoạt động sôi nổi nhất.
                         </p>
-
                         <div class="space-y-3 mb-8">
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-indigo-400"></i>
@@ -317,8 +321,7 @@
                                 <span>Sự kiện và giveaway thường xuyên</span>
                             </div>
                         </div>
-
-                        <button onclick="joinServer('https://discord.gg/example1')" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25">
+                        <button onclick="joinServer('https://discord.com/invite/79YqazgE6C')" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25">
                             <i data-lucide="log-in" class="w-5 h-5"></i>
                             Tham gia Server 1
                         </button>
@@ -326,13 +329,14 @@
                 </div>
 
                 <!-- Server 2 -->
-                <div class="glass-card rounded-3xl p-8 hover-scale relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10">
+                <div class="glass-card rounded-3xl overflow-hidden hover-scale relative group">
+                    <img src="moonlight.gif" alt="Server 2 banner" class="w-full h-48 object-cover" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <div class="relative z-10 p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-2xl font-bold shadow-lg shadow-purple-500/30">
-                                    2
+                                <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg shadow-purple-500/30">
+                                    <img src="moonlight.png" alt="Moon Light" class="w-full h-full object-cover" />
                                 </div>
                                 <div>
                                     <h3 class="text-2xl font-bold text-white">Moon Light Hub True 2</h3>
@@ -364,7 +368,7 @@
                             </div>
                         </div>
 
-                        <button onclick="joinServer('https://discord.gg/example2')" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25">
+                        <button onclick="joinServer('https://discord.com/invite/3bS7hjJ9es')" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25">
                             <i data-lucide="log-in" class="w-5 h-5"></i>
                             Tham gia Server 2
                         </button>
@@ -450,7 +454,7 @@
                         <div class="flex flex-col items-center text-center">
                             <div class="relative mb-6">
                                 <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-indigo-500/30 glow-effect">
-                                    <img src="http://static.photos/people/200x200/1" alt="Admin 1" class="w-full h-full object-cover">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Admin 1" class="w-full h-full object-cover">
                                 </div>
                                 <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center border-4 border-[#0f0f1a]">
                                     <i data-lucide="crown" class="w-5 h-5 text-white"></i>
@@ -486,18 +490,18 @@
                         <div class="flex flex-col items-center text-center">
                             <div class="relative mb-6">
                                 <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-purple-500/30 glow-effect">
-                                    <img src="http://static.photos/people/200x200/2" alt="Admin 2" class="w-full h-full object-cover">
+                                    <img src="thai.png" alt="Admin 2" class="w-full h-full object-cover">
                                 </div>
                                 <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center border-4 border-[#0f0f1a]">
                                     <i data-lucide="code-2" class="w-5 h-5 text-white"></i>
                                 </div>
                             </div>
                             
-                            <h3 class="text-2xl font-bold text-white mb-2">Admin Name 2</h3>
+                            <h3 class="text-2xl font-bold text-white mb-2">Lương Thái</h3>
                             <span class="px-4 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-semibold border border-purple-500/30 mb-4">Co-Founder & Dev</span>
                             
                             <p class="text-gray-300 mb-6 leading-relaxed">
-                                Mô tả về Admin 2 - vai trò, kinh nghiệm, sở trường... (Bạn sửa sau)
+                                "Trong thế giới của những dòng lệnh,Thái không chỉ viết code; anh ta xây dựng những kiến trúc bằng logic. Với Thái, bàn phím là một loại nhạc cụ mà mỗi cú gõ đều hướng tới sự tối ưu tuyệt đối. Anh có khả năng nhìn thấu những lỗi logic phức tạp nhất như cách người ta nhìn qua một tấm kính trong suốt. Châm ngôn sống? 'Code không chạy là lỗi của ta, nhưng code chạy mà không hiểu tại sao mới là thảm họa.'"
                             </p>
 
                             <div class="flex gap-4">
@@ -551,7 +555,7 @@
                     <div class="flex gap-2 flex-wrap justify-center">
                         <button onclick="filterScripts('all')" class="filter-btn active px-4 py-2 rounded-lg bg-indigo-500/20 text-indigo-400 text-sm font-medium border border-indigo-500/30 hover:bg-indigo-500/30 transition-all" data-filter="all">Tất cả</button>
                         <button onclick="filterScripts('autofarm')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="autofarm">AutoFarm</button>
-                        <button onclick="filterScripts('combat')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="combat">Combat</button>
+                        <button onclick="filterScripts('Auto Bounty')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="Auto Bounty">Auto Bounty</button>
                         <button onclick="filterScripts('utility')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="utility">Utility</button>
                         <button onclick="filterScripts('esp')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="esp">ESP</button>
                     </div>
@@ -567,283 +571,6 @@
             </div>
 
             <div id="scripts-grid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Script 1 - AutoFarm -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="autofarm" data-name="Script Loại 1 Auto Farm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-bold">#01</span>
-                            <span class="script-tag tag-autofarm">AutoFarm</span>
-                        </div>
-                        <button onclick="copyCode('code1', 'Script Auto Farm')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-indigo-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-indigo-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Auto Farm</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tự động farm tài nguyên, tiền và vật phẩm trong game.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code1">-- Auto Farm Script
--- Tự động thu thập tài nguyên
-while true do
-    for _, resource in pairs(workspace.Resources:GetChildren()) do
-        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, resource, 0)
-        task.wait(0.1)
-    end
-    task.wait(1)
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">1,234</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 2 - Combat -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="combat" data-name="Script Combat PVP">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold">#02</span>
-                            <span class="script-tag tag-combat">Combat</span>
-                        </div>
-                        <button onclick="copyCode('code2', 'Script Combat PVP')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-purple-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-purple-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Combat PVP</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tự động đánh, aimbot và các tính năng combat mạnh mẽ.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code2">-- Combat PVP Script
--- Aimbot & Auto Attack
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
--- Logic combat ở đây</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">892</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 3 - ESP -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="esp" data-name="Script ESP Wallhack">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-xs font-bold">#03</span>
-                            <span class="script-tag tag-esp">ESP</span>
-                        </div>
-                        <button onclick="copyCode('code3', 'Script ESP Wallhack')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-pink-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-pink-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script ESP Wallhack</h3>
-                    <p class="text-gray-400 text-sm mb-4">Nhìn xuyên tường, hiển thị vị trí người chơi và vật phẩm.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code3">-- ESP Script
--- Hiển thị thông tin qua tường
-local ESP = {}
-function ESP:Toggle(bool)
-    -- Toggle ESP logic
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">2,156</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 4 - Utility -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="utility" data-name="Script Speed Hack">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">#04</span>
-                            <span class="script-tag tag-utility">Utility</span>
-                        </div>
-                        <button onclick="copyCode('code4', 'Script Speed Hack')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-blue-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-blue-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Speed Hack</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tăng tốc độ di chuyển, nhảy cao và fly mode.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code4">-- Speed & Fly Script
-local Speed = 100
-local Fly = false
--- Logic movement hack</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">3,421</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 5 - AutoFarm -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="autofarm" data-name="Script Auto Fish">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold">#05</span>
-                            <span class="script-tag tag-autofarm">AutoFarm</span>
-                        </div>
-                        <button onclick="copyCode('code5', 'Script Auto Fish')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-yellow-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-yellow-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Auto Fish</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tự động câu cá trong các game fishing simulator.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code5">-- Auto Fishing Script
-while true do
-    -- Auto catch fish logic
-    task.wait(0.5)
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">567</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 6 - Teleport -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="teleport" data-name="Script Teleport">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold">#06</span>
-                            <span class="script-tag tag-teleport">Teleport</span>
-                        </div>
-                        <button onclick="copyCode('code6', 'Script Teleport')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-green-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-green-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Teleport</h3>
-                    <p class="text-gray-400 text-sm mb-4">Dịch chuyển tức thì đến mọi vị trí trong map.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code6">-- Teleport Script
-function TeleportTo(position)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(position)
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">1,876</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 7 - Combat -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="combat" data-name="Script Kill Aura">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold">#07</span>
-                            <span class="script-tag tag-combat">Combat</span>
-                        </div>
-                        <button onclick="copyCode('code7', 'Script Kill Aura')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-red-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-red-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Kill Aura</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tự động tấn công kẻ địch trong phạm vi.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code7">-- Kill Aura Script
-while true do
-    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-        if (enemy.HumanoidRootPart.Position - playerPos).Magnitude < 20 then
-            -- Attack logic
-        end
-    end
-    task.wait(0.1)
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">2,345</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 8 - Utility -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="utility" data-name="Script Auto Quest">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold">#08</span>
-                            <span class="script-tag tag-utility">Utility</span>
-                        </div>
-                        <button onclick="copyCode('code8', 'Script Auto Quest')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-orange-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-orange-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Auto Quest</h3>
-                    <p class="text-gray-400 text-sm mb-4">Tự động nhận và hoàn thành nhiệm vụ.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code8">-- Auto Quest Script
-function CompleteQuest()
-    -- Auto complete quest logic
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">987</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 9 - ESP -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="esp" data-name="Script Item ESP">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-bold">#09</span>
-                            <span class="script-tag tag-esp">ESP</span>
-                        </div>
-                        <button onclick="copyCode('code9', 'Script Item ESP')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-cyan-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-cyan-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Item ESP</h3>
-                    <p class="text-gray-400 text-sm mb-4">Hiển thị vị trí các vật phẩm hiếm và quý.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code9">-- Item ESP Script
-for _, item in pairs(workspace.Items:GetChildren()) do
-    if item:IsA("Tool") then
-        -- Create ESP for item
-    end
-end</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">1,543</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
-
-                <!-- Script 10 - Utility -->
-                <div class="script-card glass-card rounded-2xl p-6 hover-scale relative group" data-category="utility" data-name="Script Anti AFK">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-violet-500/20 text-violet-400 text-xs font-bold">#10</span>
-                            <span class="script-tag tag-utility">Utility</span>
-                        </div>
-                        <button onclick="copyCode('code10', 'Script Anti AFK')" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group-hover:bg-violet-500/20">
-                            <i data-lucide="copy" class="w-4 h-4 text-gray-400 group-hover:text-violet-400"></i>
-                        </button>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-white script-title">Script Anti AFK</h3>
-                    <p class="text-gray-400 text-sm mb-4">Chống bị đá khỏi game khi AFK lâu.</p>
-                    <div class="bg-black/50 rounded-lg p-3 overflow-x-auto border border-white/10 relative group/code">
-                        <pre class="language-lua text-xs"><code id="code10">-- Anti AFK Script
-local VirtualUser = game:GetService("VirtualUser")
-game.Players.LocalPlayer.Idled:Connect(function()
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton2(Vector2.new())
-end)</code></pre>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/code:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> <span class="copy-counter">4,521</span> lượt copy</span>
-                        <span class="flex items-center gap-1 text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Hoạt động</span>
-                    </div>
-                </div>
             </div>
             
             <!-- No Results Message -->
@@ -1157,6 +884,88 @@ end)</code></pre>
                 parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         });
+
+        // Load uploaded scripts from localStorage and display them
+        function loadUploadedScripts() {
+            const scriptsGrid = document.getElementById('scripts-grid');
+            if (!scriptsGrid) return;
+
+            // Category styling mapping
+            const categoryStyles = {
+                'autofarm': { badge: 'bg-green-500/20 text-green-400', label: 'AUTOFARM' },
+                'combat': { badge: 'bg-red-500/20 text-red-400', label: 'COMBAT' },
+                'esp': { badge: 'bg-blue-500/20 text-blue-400', label: 'ESP' },
+                'utility': { badge: 'bg-yellow-500/20 text-yellow-400', label: 'UTILITY' },
+                'teleport': { badge: 'bg-purple-500/20 text-purple-400', label: 'TELEPORT' }
+            };
+
+            try {
+                const uploadedScriptsJson = localStorage.getItem('uploaded_scripts');
+                if (!uploadedScriptsJson) return;
+
+                const uploadedScripts = JSON.parse(uploadedScriptsJson);
+                if (!Array.isArray(uploadedScripts) || uploadedScripts.length === 0) return;
+
+                uploadedScripts.forEach((script) => {
+                    const codeId = `code-${script.id}`;
+                    const categoryLower = script.category.toLowerCase();
+                    const catStyle = categoryStyles[categoryLower] || { badge: 'bg-gray-500/20 text-gray-400', label: script.category.toUpperCase() };
+                    
+                    const scriptCard = document.createElement('div');
+                    scriptCard.className = 'script-card glass-card rounded-2xl p-6 hover-scale transition-all duration-300 hover:border-indigo-500/50 border border-white/10';
+                    scriptCard.setAttribute('data-category', categoryLower);
+                    scriptCard.setAttribute('data-name', script.name);
+                    
+                    scriptCard.innerHTML = `
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="tag px-3 py-1 rounded-full text-xs font-semibold ${catStyle.badge}">${catStyle.label}</span>
+                            <button onclick="copyCode('${codeId}', '${script.name}')" class="ml-auto text-gray-400 hover:text-indigo-400 transition-colors text-sm font-medium flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-indigo-500/10">
+                                <i data-lucide="copy" class="w-4 h-4"></i>
+                                Copy
+                            </button>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold text-white mb-2">${script.name}</h3>
+                        <p class="text-gray-400 text-sm mb-4">${script.desc}</p>
+                        
+                        <div class="code-container mb-4">
+                            <div class="bg-black/40 rounded-lg overflow-hidden border border-white/5">
+                                <pre class="p-4"><code id="${codeId}" class="language-lua text-xs text-gray-300">${escapeHtml(script.code)}</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between pt-4 border-t border-white/10">
+                            <div class="flex items-center gap-4 text-sm text-gray-400">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    ${script.downloads || 0} lần tải
+                                </span>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400">${script.status}</span>
+                        </div>
+                    `;
+                    
+                    scriptsGrid.appendChild(scriptCard);
+                });
+
+                // Re-initialize Lucide icons for new elements
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            } catch (error) {
+                console.error('Error loading uploaded scripts:', error);
+            }
+        }
+
+        // Helper function to escape HTML special characters
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load uploaded scripts when page loads
+        document.addEventListener('DOMContentLoaded', loadUploadedScripts);
     </script>
 </body>
 </html>
