@@ -92,6 +92,31 @@
     <script>
         lucide.createIcons();
 
+        // ── Dọn dẹp localStorage cũ khi mở trang ──
+        (function cleanupOldKeys() {
+            try {
+                // 1. Xóa fk_ cache nếu đã hết hạn
+                const fkExp = parseInt(localStorage.getItem('fk_exp') || '0');
+                if (fkExp && Date.now() > fkExp) {
+                    ['fk_token','fk_key','fk_exp','fk_logged'].forEach(k => localStorage.removeItem(k));
+                }
+
+                // 2. Xóa tất cả fallback_key_* cũ tích lũy
+                const toDelete = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith('fallback_key_')) toDelete.push(k);
+                }
+                toDelete.forEach(k => localStorage.removeItem(k));
+
+                // 3. Xóa lv_ session cũ nếu hết hạn
+                const lvExp = parseInt(localStorage.getItem('lv_token_expire') || '0');
+                if (lvExp && Date.now() > lvExp) {
+                    ['lv_token','lv_token_expire','lv_verified','lv_start_time','visited_getkey'].forEach(k => localStorage.removeItem(k));
+                }
+            } catch(e) {}
+        })();
+
         // Tạo sao nền
         (function() {
             const c = document.getElementById('stars');
