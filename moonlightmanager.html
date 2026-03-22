@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moon Light Hub Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Thêm CryptoJS để hash mật khẩu -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family:'Inter',sans-serif;
+      background-image: url('moonlight.gif');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color:#e8eafc;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 17, 30, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      background: rgba(12, 25, 58, 0.68);
+      border: 1px solid rgba(120, 164, 255, 0.28);
+      backdrop-filter: blur(14px);
+      border-radius: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
+    .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
+    .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
+    @keyframes twinkle { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.5); } }
+
+    header h1 { color: #f8fbff; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5); }
+    header p { color: #cbd3ea; }
+    #logout-btn { background: rgba(255, 88, 117, 0.9); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 16px rgba(0,0,0,0.36); backdrop-filter: blur(6px); }
+    #logout-btn:hover { background: rgba(255, 87, 111, 1); }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  
+  <div class="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6" style="position:relative; z-index:1;">
+    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" style="position:relative; z-index:2; background: rgba(4, 12, 35, 0.35); backdrop-filter: blur(8px); border-radius: 14px; padding: 0.75rem;">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Moon Light Hub Manager</h1>
+        <p class="text-xs text-slate-300 mt-1">Quản lý key, time-to-live và script</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="logout-btn" class="px-4 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white">Đăng xuất</button>
+      </div>
+    </header>
+
+    <div id="auth" class="card glass p-5 max-w-md mx-auto">
+      <h2 class="text-lg font-bold mb-3">Đăng nhập Admin</h2>
+      <input id="admin-pass" type="password" placeholder="Nhập mật khẩu admin" class="w-full px-4 py-3 rounded-lg bg-slate-900/60 border border-slate-500 text-white mb-3" />
+      <button id="login-btn" class="w-full px-4 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Đăng nhập</button>
+      <p id="auth-msg" class="mt-2 text-xs text-red-300 hidden">Mật khẩu sai hoặc không hợp lệ.</p>
+    </div>
+
+    <div id="dashboard" class="hidden space-y-5">
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <article class="card p-5 glass">
+          <h3 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Trạng thái Script</Script></h3>
+          <p class="text-4xl font-extrabold">Online</p>
+          <p class="text-xs text-slate-400 mt-1">Last: <span id="last-time">-</span></p>
+        </article>
+        <article class="card p-5 glass">
+          <h3 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Số key còn hiệu lực</h3>
+          <p id="active-count" class="text-4xl font-extrabold">0</p>
+          <p class="text-xs text-slate-400 mt-1">Sẽ update tự động</p>
+        </article>
+        <article class="card p-5 glass">
+          <h3 class="text-sm text-slate-300 uppercase tracking-widest mb-3">Key vĩnh viễn</h3>
+          <p id="perm-count" class="text-4xl font-extrabold">0</p>
+          <p class="text-xs text-slate-400 mt-1">Không bao giờ hết hạn</p>
+        </article>
+      </section>
+
+      <section class="card glass p-5">
+        <h3 class="text-lg font-bold mb-4">Tạo key mới</h3>
+        <div class="grid gap-3 grid-cols-1 sm:grid-cols-2">
+          <input id="new-key" type="text" placeholder="Key (không bắt buộc)" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white" />
+          <select id="ttl" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white">
+            <option value="3600">1 giờ</option>
+            <option value="86400" selected>24 giờ</option>
+            <option value="604800">7 ngày</option>
+            <option value="0">Vĩnh viễn</option>
+          </select>
+        </div>
+        <button id="create-key" class="mt-3 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white">Tạo key</button>
+      </section>
+
+      <section class="card glass p-5">
+        <h3 class="text-lg font-bold mb-4">Danh sách key (hết hạn tự xóa)</h3>
+        <div id="keys-list" class="space-y-2"></div>
+      </section>
+
+      <section class="card glass p-5">
+        <h3 class="text-lg font-bold mb-4">Upload Script Mới</h3>
+        <div class="space-y-3">
+          <input id="script-name" type="text" placeholder="Tên script" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white" />
+          <select id="script-category" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white">
+            <option value="autofarm">AutoFarm</option>
+            <option value="combat">Combat</option>
+            <option value="utility">Utility</option>
+            <option value="esp">ESP</option>
+            <option value="teleport">Teleport</option>
+          </select>
+          <textarea id="script-code" placeholder="Nhập code script (Lua/JavaScript)..." class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white h-32 font-mono text-xs"></textarea>
+          <input id="script-desc" type="text" placeholder="Mô tả script" class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-500 text-white" />
+          <button id="upload-script" class="w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Upload Script</button>
+        </div>
+        <div id="upload-msg" class="mt-3 text-xs text-green-400 hidden"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      const count = 50; // Reduced from 100 for better performance
+      
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+    createStars();
+
+  const ADMIN_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'; // ví dụ cho "123456"
+
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const pw = document.getElementById('admin-pass').value.trim();
+        if (!pw) {
+          document.getElementById('auth-msg').textContent = 'Vui lòng nhập mật khẩu';
+          document.getElementById('auth-msg').classList.remove('hidden');
+          return;
+        }
+
+        const inputHash = CryptoJS.SHA256(pw).toString();
+
+        if (inputHash === ADMIN_HASH) {
+          document.getElementById('auth').classList.add('hidden');
+          document.getElementById('dashboard').classList.remove('hidden');
+          // Nếu bạn có hàm renderKeys() hoặc init dashboard thì gọi ở đây
+          if (typeof renderKeys === 'function') renderKeys();
+          alert('Đăng nhập thành công!'); // hoặc dùng toast nếu có
+        } else {
+          document.getElementById('auth-msg').textContent = 'Mật khẩu không đúng';
+          document.getElementById('auth-msg').classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('auth').classList.remove('hidden');
+        document.getElementById('admin-pass').value = '';
+        document.getElementById('auth-msg').classList.add('hidden');
+      });
+
+    const storageKey = 'created_keys';
+    function getKeys() { return JSON.parse(localStorage.getItem(storageKey) || '[]'); }
+    function saveKeys(keys) { localStorage.setItem(storageKey, JSON.stringify(keys)); }
+
+    function formatRemaining(ms) {
+      if (ms === -1) return 'Vĩnh viễn';
+      const h = Math.floor(ms / 3600000); const m = Math.floor(ms % 3600000 / 60000); const s = Math.floor(ms % 60000 / 1000);
+      return `${h.toString().padStart(2,'0')}h ${m.toString().padStart(2,'0')}m ${s.toString().padStart(2,'0')}s`;
+    }
+
+    function renderKeys() {
+      const listEl = document.getElementById('keys-list');
+      let keys = getKeys();
+      const now = Date.now();
+      let active = 0, perm = 0;
+
+      keys = keys.filter(item => {
+        if (item.ttl === 0) { perm++; active++; return true; }
+        const remain = item.createdAt + item.ttl*1000 - now;
+        if (remain <= 0) return false;
+        active++;
+        return true;
+      });
+
+      saveKeys(keys);
+
+      document.getElementById('active-count').innerText = active;
+      document.getElementById('perm-count').innerText = perm;
+      document.getElementById('last-time').innerText = new Date().toLocaleString('vi-VN');
+
+      if (!keys.length) { listEl.innerHTML = '<p class="text-sm text-slate-300">Chưa có key nào.</p>'; return; }
+
+      listEl.innerHTML = '';
+      keys.forEach((item, idx) => {
+        const expireAt = item.ttl === 0 ? -1 : (item.createdAt + item.ttl*1000);
+        const remaining = item.ttl === 0 ? -1 : (expireAt - now);
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-1 md:grid-cols-4 gap-2 items-center bg-slate-900/60 border border-slate-700 rounded-lg p-3';
+        row.innerHTML = `
+          <div class="font-mono text-sm text-emerald-200 break-all">${item.key}</div>
+          <div class="text-xs text-slate-300">${item.ttl===0 ? 'Vĩnh viễn' : item.ttl+'s'}</div>
+          <div class="text-xs text-slate-300">${item.ttl===0 ? 'Không bao giờ' : formatRemaining(remaining)}</div>
+          <div class="flex gap-2 justify-end md:justify-start">
+            <button class="delete-key px-2 py-1 rounded bg-rose-500 hover:bg-rose-600 text-white text-xs" data-index="${idx}">Xóa</button>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      document.querySelectorAll('.delete-key').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.index);
+          keys.splice(idx, 1);
+          saveKeys(keys);
+          renderKeys();
+        });
+      });
+    }
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const pw = document.getElementById('admin-pass').value;
+      if (pw === adminPassword) {
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        renderKeys();
+      } else {
+        document.getElementById('auth-msg').classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('auth').classList.remove('hidden');
+      document.getElementById('admin-pass').value='';
+      document.getElementById('auth-msg').classList.add('hidden');
+    });
+
+    document.getElementById('create-key').addEventListener('click', () => {
+      const custom = document.getElementById('new-key').value.trim();
+      let key = custom || `moonlight-${randomString(8)}`;
+      const ttl = Number(document.getElementById('ttl').value);
+      const keys = getKeys();
+      keys.push({ key, createdAt: Date.now(), ttl });
+      saveKeys(keys);
+      document.getElementById('new-key').value = '';
+      renderKeys();
+    });
+
+    // Upload Script Handler
+    document.getElementById('upload-script').addEventListener('click', () => {
+      const name = document.getElementById('script-name').value.trim();
+      const category = document.getElementById('script-category').value;
+      const code = document.getElementById('script-code').value.trim();
+      const desc = document.getElementById('script-desc').value.trim();
+
+      if (!name || !code) {
+        alert('Nhập tên script và code!');
+        return;
+      }
+
+      const scripts = JSON.parse(localStorage.getItem('uploaded_scripts') || '[]');
+      scripts.push({
+        id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+        name,
+        category,
+        code,
+        desc,
+        downloads: Math.floor(Math.random() * 5000),
+        status: 'Hoạt động',
+        uploadedAt: new Date().toLocaleString('vi-VN')
+      });
+      localStorage.setItem('uploaded_scripts', JSON.stringify(scripts));
+
+      // Clear form
+      document.getElementById('script-name').value = '';
+      document.getElementById('script-code').value = '';
+      document.getElementById('script-desc').value = '';
+
+      // Show success message
+      const msg = document.getElementById('upload-msg');
+      msg.innerText = '✓ Upload script thành công!';
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 3000);
+    });
+
+    // Auto-update remaining time every 5 seconds (was 1s, now optimized)
+    let updateInterval = setInterval(() => {
+      try {
+        const now = Date.now();
+        const keys = getKeys();
+        document.querySelectorAll('.delete-key').forEach((btn, idx) => {
+          if (keys[idx]) {
+            const item = keys[idx];
+            if (item.ttl !== 0) {
+              const remaining = item.createdAt + item.ttl*1000 - now;
+              if (remaining <= 0) {
+                renderKeys(); // Re-render if expired
+              } else {
+                const timeCell = btn.parentElement.previousElementSibling;
+                if (timeCell) {
+                  timeCell.innerText = formatRemaining(remaining);
+                }
+              }
+            }
+          }
+        });
+      } catch (e) {
+        console.error('Update interval error:', e);
+      }
+    }, 5000);
+
+    renderKeys();
+  </script>
+</body>
+</html>
