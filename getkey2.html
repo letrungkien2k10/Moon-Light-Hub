@@ -236,23 +236,23 @@
 
         // Hợp lệ nếu:
         // 1. Đã qua getkey (visited_getkey = true)
-        // 2. Còn trong 24 giờ (user có thể tắt tab, quay lại sau)
-        // 3. Có bất kỳ param token/hash nào trong URL (từ Linkvertise)
-        //    HOẶC không có param nhưng vẫn còn session hợp lệ (trường hợp redirect lạ)
+        // 2. Còn trong 24 giờ
+        // 3. Có tokenFromUrl từ Linkvertise (bắt buộc — tránh vào thẳng không qua LV)
         const hasSession = visitedGetkey && Date.now() < tokenExpire;
-        const isValid = hasSession && (!!tokenFromUrl || !!storedToken);
+        const isValid = hasSession && !!tokenFromUrl;
 
         if (!isValid) {
-            // Kiểm tra thêm: nếu có visited_getkey nhưng hết hạn → thông báo rõ hơn
+            const denied = document.getElementById('access-denied');
             if (visitedGetkey && Date.now() >= tokenExpire) {
-                document.getElementById('access-denied').querySelector('p').textContent =
+                denied.querySelector('p').textContent =
                     'Session đã hết hạn (24 giờ). Vui lòng bắt đầu lại từ trang lấy key.';
+            } else if (!tokenFromUrl) {
+                denied.querySelector('p').textContent =
+                    'Bạn phải hoàn thành Linkvertise trước. Không thể vào trực tiếp trang này.';
             }
-            document.getElementById('access-denied').classList.remove('hidden');
+            denied.classList.remove('hidden');
             lucide.createIcons();
         } else {
-            // Hợp lệ — GIỮ LẠI storage để user có thể tắt tab rồi quay lại
-            // Chỉ xóa token URL param đã dùng, KHÔNG xóa visited_getkey và expire
             document.getElementById('main-flow').classList.remove('hidden');
             lucide.createIcons();
             startFlow();

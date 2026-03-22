@@ -6,8 +6,50 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# ── Bảo vệ DDoS / Security Headers ──
 [[headers]]
   for = "/*"
   [headers.values]
+    # Chống clickjacking
     X-Frame-Options = "DENY"
+    # Chống XSS
     X-XSS-Protection = "1; mode=block"
+    # Không sniff MIME type
+    X-Content-Type-Options = "nosniff"
+    # Chỉ load resource từ domain này
+    Content-Security-Policy = "default-src 'self' https://cdn.tailwindcss.com https://unpkg.com https://fonts.googleapis.com https://fonts.gstatic.com https://www.google.com https://www.gstatic.com https://direct-link.net; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com;"
+    # HTTPS only
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # Không gửi referrer ra ngoài
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Tắt các API nguy hiểm
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+# ── Bảo vệ riêng cho Netlify Functions ──
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://moonlighthub.netlify.app"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, x-admin-key"
+
+# ── Chặn các path nguy hiểm ──
+[[redirects]]
+  from = "/admin/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/wp-admin/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/.env"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/config/*"
+  to = "/404.html"
+  status = 404

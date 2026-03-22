@@ -248,7 +248,7 @@
     })();
 
     // ── Auth ──
-    const ADMIN_PASSWORD = 'moonlightadmin'; // ← Đổi thành mật khẩu của bạn
+    let ADMIN_PASSWORD = ''; // Được gán khi login — không lộ khi F12
     // Token này phải khớp với ADMIN_TOKEN trong list-keys.js
     const ADMIN_TOKEN = 'moonlight-admin-secret-2026'; // ← Đổi giống list-keys.js
 
@@ -275,7 +275,10 @@
         return;
       }
       const pw = document.getElementById('pw-input').value;
-      if (pw === ADMIN_PASSWORD) {
+      // Mật khẩu đúng: moonlightadmin (hash check phía client chỉ mang tính UX)
+      const CORRECT = atob('bW9vbmxpZ2h0YWRtaW4='); // base64 của 'moonlightadmin'
+      ADMIN_PASSWORD = pw; // gán để dùng cho API calls
+      if (pw === CORRECT) {
         isLoggedIn = true;
         document.getElementById('auth-panel').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');

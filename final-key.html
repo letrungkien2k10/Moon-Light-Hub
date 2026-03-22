@@ -101,13 +101,8 @@
                     ['fk_token','fk_key','fk_exp','fk_logged'].forEach(k => localStorage.removeItem(k));
                 }
 
-                // 2. Xóa tất cả fallback_key_* cũ tích lũy
-                const toDelete = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const k = localStorage.key(i);
-                    if (k && k.startsWith('fallback_key_')) toDelete.push(k);
-                }
-                toDelete.forEach(k => localStorage.removeItem(k));
+                // 2. Xóa fallback_key_* cũ — nhưng chỉ sau khi loadKey() đã chạy xong
+                // (được gọi ở cuối trang, không xóa ở đây để tránh race condition)
 
                 // 3. Xóa lv_ session cũ nếu hết hạn
                 const lvExp = parseInt(localStorage.getItem('lv_token_expire') || '0');
@@ -292,7 +287,17 @@
             showError('Token không hợp lệ, đã sử dụng, hoặc hết hạn', '❌ Vui lòng quay lại trang đầu để lấy key mới.');
         }
 
-        loadKey();
+        loadKey().finally(() => {
+            // Dọn fallback_key_* sau khi loadKey đã xử lý xong
+            try {
+                const toDelete = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith('fallback_key_')) toDelete.push(k);
+                }
+                toDelete.forEach(k => localStorage.removeItem(k));
+            } catch(e) {}
+        });
     </script>
 </body>
 </html>
