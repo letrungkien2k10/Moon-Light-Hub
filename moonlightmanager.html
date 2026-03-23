@@ -268,7 +268,7 @@
     document.getElementById('login-btn').addEventListener('click', doLogin);
     document.getElementById('pw-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
 
-    function doLogin() {
+    async function doLogin() {
       if (!adminCaptchaPassed) {
         document.getElementById('auth-err').textContent = '❌ Vui lòng xác minh reCAPTCHA trước!';
         document.getElementById('auth-err').classList.remove('hidden');
@@ -276,9 +276,15 @@
       }
       const pw = document.getElementById('pw-input').value;
       // Mật khẩu đúng: moonlightadmin (hash check phía client chỉ mang tính UX)
-      const CORRECT = atob('bW9vbmxpZ2h0YWRtaW4='); // base64 của 'moonlightadmin'
+      // So khớp bằng hash đơn giản — không lưu password plaintext hay base64
+      // Đổi mật khẩu: thay chuỗi hash bên dưới bằng kết quả sha256('mật_khẩu_mới')
+      // Tool: https://emn178.github.io/online-tools/sha256.html
+      const pwHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw))
+        .then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join(''));
+      // Hash của 'moonlightadmin':
+      const CORRECT_HASH = 'e0e968421dc5038ab8d862e9c1bba8a9c79fd46f3dbb4bb3e5df0a2eb2f2ecb1';
       ADMIN_PASSWORD = pw; // gán để dùng cho API calls
-      if (pw === CORRECT) {
+      if (pwHash === CORRECT_HASH) {
         isLoggedIn = true;
         document.getElementById('auth-panel').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
