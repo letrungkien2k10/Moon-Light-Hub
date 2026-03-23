@@ -282,7 +282,7 @@
       const pwHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw))
         .then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join(''));
       // Hash của 'moonlightadmin':
-      const CORRECT_HASH = '5494ffb46bac3bc14d71904835b6a33d56eaec3d7ba9937c7abe74ba4c8ea1d3';
+      const CORRECT_HASH = '420fbe1e6eb1bc67c401cf9638d5781b48cfed3c38d7af20cd56a82df71ed8c9'; // SHA256('moonlightadmin')
       ADMIN_PASSWORD = pw; // gán để dùng cho API calls
       if (pwHash === CORRECT_HASH) {
         isLoggedIn = true;
