@@ -568,7 +568,7 @@
             </div>
 
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Kho Code Script</h2>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Kho Script</h2>
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto">Nhiều loại script đa dạng - Copy và sử dụng ngay. Click để copy code vào clipboard!</p>
             </div>
 
@@ -809,9 +809,14 @@
         }
 
         // Filter scripts function
+        function normalizeScriptCategory(category) {
+            return String(category || '').trim().toLowerCase();
+        }
+
         function filterScripts(category) {
             const scripts = document.querySelectorAll('[data-category]');
             const filterBtns = document.querySelectorAll('.filter-btn');
+            const normalizedCategory = normalizeScriptCategory(category);
             
             // Update active button
             filterBtns.forEach(btn => {
@@ -829,7 +834,7 @@
             // Filter scripts
             let visibleCount = 0;
             scripts.forEach(script => {
-                if (category === 'all' || script.getAttribute('data-category') === category) {
+                if (normalizedCategory === 'all' || normalizeScriptCategory(script.getAttribute('data-category')) === normalizedCategory) {
                     script.classList.remove('hidden-script');
                     script.style.animation = 'fadeIn 0.3s ease-in-out';
                     visibleCount++;
@@ -894,23 +899,28 @@
 
             // Category styling mapping
             const categoryStyles = {
-                'autofarm': { badge: 'bg-green-500/20 text-green-400', label: 'AUTOFARM' },
-                'combat': { badge: 'bg-red-500/20 text-red-400', label: 'COMBAT' },
-                'esp': { badge: 'bg-blue-500/20 text-blue-400', label: 'ESP' },
-                'utility': { badge: 'bg-yellow-500/20 text-yellow-400', label: 'UTILITY' },
-                'teleport': { badge: 'bg-purple-500/20 text-purple-400', label: 'TELEPORT' }
+                'main': { badge: 'bg-green-500/20 text-green-400', label: 'MAIN' },
+                'autobounty': { badge: 'bg-red-500/20 text-red-400', label: 'AUTO BOUNTY' },
+                'tools': { badge: 'bg-yellow-500/20 text-yellow-400', label: 'TOOLS' },
+                'kaitun': { badge: 'bg-blue-500/20 text-blue-400', label: 'KAITUN' },
+                'hop': { badge: 'bg-purple-500/20 text-purple-400', label: 'HOP' },
+                'pvp': { badge: 'bg-orange-500/20 text-orange-400', label: 'PVP' }
             };
 
             try {
-                const uploadedScriptsJson = localStorage.getItem('uploaded_scripts');
+                const uploadedScriptsJson =
+                    localStorage.getItem('mlh_scripts_v2') ||
+                    localStorage.getItem('uploaded_scripts');
                 if (!uploadedScriptsJson) return;
 
                 const uploadedScripts = JSON.parse(uploadedScriptsJson);
                 if (!Array.isArray(uploadedScripts) || uploadedScripts.length === 0) return;
 
+                scriptsGrid.innerHTML = '';
+
                 uploadedScripts.forEach((script) => {
                     const codeId = `code-${script.id}`;
-                    const categoryLower = script.category.toLowerCase();
+                    const categoryLower = normalizeScriptCategory(script.category);
                     const catStyle = categoryStyles[categoryLower] || { badge: 'bg-gray-500/20 text-gray-400', label: script.category.toUpperCase() };
                     
                     const scriptCard = document.createElement('div');
@@ -949,6 +959,8 @@
                     
                     scriptsGrid.appendChild(scriptCard);
                 });
+
+                document.getElementById('script-count').innerText = `Hiển thị ${uploadedScripts.length} script`;
 
                 // Re-initialize Lucide icons for new elements
                 if (window.lucide) {
