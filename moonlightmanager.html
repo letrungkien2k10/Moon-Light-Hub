@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -186,11 +186,12 @@
           <input id="s-name" type="text" placeholder="Tên script" class="input-base" />
           <div class="grid sm:grid-cols-2 gap-3">
             <select id="s-category" class="input-base">
-              <option value="autofarm">AutoFarm</option>
-              <option value="combat">Combat</option>
-              <option value="utility">Utility</option>
-              <option value="esp">ESP</option>
-              <option value="teleport">Teleport</option>
+              <option value="main">Main</option>
+              <option value="autobounty">Auto Bounty</option>
+              <option value="tools">Tools</option>
+              <option value="kaitun">Kaitun</option>
+              <option value="hop">Hop</option>
+              <option value="pvp">PvP</option>
             </select>
             <input id="s-desc" type="text" placeholder="Mô tả ngắn" class="input-base" />
           </div>
@@ -339,6 +340,11 @@
       return new Date(ts).toLocaleString('vi-VN');
     }
 
+    function formatRemain(expireAt) {
+      const left = Number(expireAt || 0) - Date.now();
+      return left > 0 ? formatMs(left) : 'Đã hết hạn';
+    }
+
     // ── Keys ──
     function renderKeys() {
       const list = document.getElementById('keys-list');
@@ -430,7 +436,7 @@
           row.className = 'flex flex-col sm:flex-row sm:items-center gap-2 bg-cyan-950/40 border border-cyan-800/40 rounded-lg p-3';
           row.innerHTML = `
             <span class="mono text-cyan-300 text-sm flex-1 break-all">${item.key}</span>
-            <span class="tag" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">✅ Đã dùng</span>
+            <span class="tag" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">Còn ${formatRemain(item.expireAt)}</span>
             <span class="text-xs text-slate-500">${item.usedAtStr || new Date(item.usedAt).toLocaleString('vi-VN')}</span>
           `;
           el.appendChild(row);
@@ -472,11 +478,12 @@
       }
 
       const catColors = {
-        autofarm: 'text-green-400',
-        combat: 'text-red-400',
-        utility: 'text-yellow-400',
-        esp: 'text-blue-400',
-        teleport: 'text-purple-400',
+        main: 'text-green-400',
+        autobounty: 'text-red-400',
+        tools: 'text-yellow-400',
+        kaitun: 'text-blue-400',
+        hop: 'text-purple-400',
+        pvp: 'text-orange-400',
       };
 
       list.innerHTML = '';
@@ -576,6 +583,7 @@
             row.innerHTML = `
               <span class="mono text-yellow-300 text-sm flex-1 break-all">${log.key}</span>
               <span class="text-xs text-cyan-400 font-semibold">${sourceLabel}</span>
+              <span class="tag tag-active">Còn ${formatRemain(log.expireAt)}</span>
               <span class="text-xs text-slate-400">${log.usedAtStr || new Date(log.usedAt).toLocaleString('vi-VN')}</span>
             `;
             listEl.appendChild(row);

@@ -141,12 +141,12 @@
         }
 
         // Gọi Netlify function để lưu key đã dùng vào Blobs
-        async function logKeyToServer(key) {
+        async function logKeyToServer(key, expireAt) {
             try {
                 await fetch('/.netlify/functions/log-key', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key, source: 'final-key' })
+                    body: JSON.stringify({ key, source: 'final-key', expireAt })
                 });
             } catch(e) {
                 console.warn('logKeyToServer failed (non-critical):', e);
@@ -162,7 +162,7 @@
 
             // Ghi log lên server — chỉ lần đầu, không ghi lại khi reload/mở lại
             if (localStorage.getItem('fk_logged') !== key) {
-                logKeyToServer(key);
+                logKeyToServer(key, expireAt);
                 localStorage.setItem('fk_logged', key);
             }
 
