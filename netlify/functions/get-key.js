@@ -1,6 +1,6 @@
 // netlify/functions/get-key.js
-// Dùng @netlify/blobs built-in của Netlify — không cần cài thêm gì
 import { getStore } from '@netlify/blobs';
+import { checkRateLimit, getClientIP } from './rate-limit.js';
 
 function randomToken(length = 32) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -14,7 +14,7 @@ function getToday() {
 }
 
 const HEADERS = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://moonlighthub.netlify.app',
   'Content-Type': 'application/json',
 };
 
@@ -23,52 +23,57 @@ export default async (req, context) => {
     return new Response('', { status: 200, headers: HEADERS });
   }
 
+  // ── Rate limiting: tối đa 5 POST/phút mỗi IP ──
+  if (req.method === 'POST') {
+    const ip = getClientIP(req);
+    const limit = await checkRateLimit(ip, 'get-key', 5, 60000);
+    if (!limit.allowed) {
+      return new Response(JSON.stringify({
+        error: 'Quá nhiều yêu cầu. Vui lòng thử lại sau.',
+        retryAfter: limit.retryAfter
+      }), {
+        status: 429,
+        headers: {
+          ...HEADERS,
+          'Retry-After': String(limit.retryAfter),
+          'X-RateLimit-Remaining': '0'
+        }
+      });
+    }
+  }
+
   try {
     const store = getStore('moonlight-keys');
     const today = getToday();
     const dailyKeyName = `daily-${today}`;
 
-    // GET: xem key hôm nay
     if (req.method === 'GET') {
       let keyData = null;
       try { keyData = await store.get(dailyKeyName, { type: 'json' }); } catch {}
-
       if (!keyData) {
         const newKey = `moonlight-${randomToken(8)}-${today.replace(/-/g, '')}`;
         keyData = { key: newKey, date: today, createdAt: Date.now() };
         await store.setJSON(dailyKeyName, keyData);
       }
-
       return new Response(JSON.stringify({ key: keyData.key, date: keyData.date }), {
         status: 200, headers: HEADERS
       });
     }
 
-    // POST: tạo one-time token
     if (req.method === 'POST') {
       let keyData = null;
       try { keyData = await store.get(dailyKeyName, { type: 'json' }); } catch {}
-
       if (!keyData) {
         const newKey = `moonlight-${randomToken(8)}-${today.replace(/-/g, '')}`;
         keyData = { key: newKey, date: today, createdAt: Date.now() };
         await store.setJSON(dailyKeyName, keyData);
       }
-
       const token = randomToken(32);
       const expireAt = Date.now() + 24 * 60 * 60 * 1000;
-
-      await store.setJSON(`token-${token}`, {
-        key: keyData.key,
-        expireAt,
+      await store.setJSON(`token-${token}`, { key: keyData.key, expireAt });
+      return new Response(JSON.stringify({ token, key: keyData.key, date: today, expireAt }), {
+        status: 200, headers: HEADERS
       });
-
-      return new Response(JSON.stringify({
-        token,
-        key: keyData.key,
-        date: today,
-        expireAt,
-      }), { status: 200, headers: HEADERS });
     }
 
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
@@ -77,7 +82,7 @@ export default async (req, context) => {
 
   } catch (err) {
     console.error('get-key error:', err);
-    return new Response(JSON.stringify({ error: 'Internal server error', detail: err.message }), {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500, headers: HEADERS
     });
   }
