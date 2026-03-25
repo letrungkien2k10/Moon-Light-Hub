@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhiệm vụ - Moon Light Hub</title>
+    <title>Tasks - Moon Light Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="moonlight.png" />
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
@@ -43,16 +44,16 @@
 <body>
     <div class="stars" id="stars"></div>
 
-    <!-- Trạng thái lỗi truy cập -->
+    <!-- Access error state -->
     <div id="access-denied" class="glass-card text-center hidden">
         <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
             <i data-lucide="shield-x" class="w-8 h-8 text-red-400"></i>
         </div>
-        <h2 class="text-2xl font-bold text-red-400 mb-3">Truy cập không hợp lệ</h2>
-        <p class="text-gray-400 mb-6">Bạn phải hoàn thành Linkvertise trước. Token không hợp lệ hoặc đã hết hạn (30 phút).</p>
+        <h2 class="text-2xl font-bold text-red-400 mb-3">Access Denied</h2>
+        <p class="text-gray-400 mb-6">You must complete Linkvertise first. Token is invalid or expired (30 minutes).</p>
         <a href="/getkey.html" class="btn-action btn-indigo" style="display:inline-flex;width:auto;padding:0.75rem 2rem;">
             <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            Quay lại trang đầu
+            Back to Start
         </a>
     </div>
 
@@ -60,7 +61,7 @@
     <div id="main-flow" class="glass-card hidden">
         <div class="text-center mb-6">
             <h1 class="text-3xl font-extrabold gradient-text mb-1">Moon Light Hub</h1>
-            <p id="status-text" class="text-gray-400 text-sm">Hoàn thành nhiệm vụ để nhận key</p>
+            <p id="status-text" class="text-gray-400 text-sm">Complete the tasks to receive your key</p>
         </div>
 
         <!-- Progress bar -->
@@ -68,55 +69,55 @@
             <div class="progress-fill" id="progress-fill" style="width:0%"></div>
         </div>
 
-        <!-- BƯỚC 1: TikTok -->
+        <!-- STEP 1: TikTok -->
         <div id="step-tiktok" class="step-box mb-4">
             <div class="flex items-center gap-3 mb-4">
                 <span class="badge" style="background:rgba(236,72,153,0.15);color:#f472b6;border:1px solid rgba(236,72,153,0.3)">
-                    🎵 Bước 1 / 3
+                    🎵 Step 1 / 3
                 </span>
                 <span class="text-sm text-gray-300 font-semibold">Follow TikTok</span>
             </div>
-            <p class="text-gray-400 text-sm mb-4">Follow kênh TikTok Moon Light Hub để tiếp tục.</p>
+            <p class="text-gray-400 text-sm mb-4">Follow the Moon Light Hub TikTok channel to continue.</p>
             <a href="https://tiktok.com/@moonlight.hub" target="_blank" id="tiktok-link" class="btn-action btn-pink mb-3" style="display:flex">
                 <i data-lucide="external-link" class="w-5 h-5"></i>
-                Mở TikTok để Follow
+                Open TikTok to Follow
             </a>
             <button id="confirm-tiktok" class="btn-action btn-green" disabled>
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã Follow TikTok ✓
+                I followed TikTok ✓
             </button>
-            <p id="tiktok-hint" class="text-xs text-gray-500 mt-2 text-center">Bấm nút mở TikTok trước, sau đó chờ <span id="tiktok-timer" class="text-yellow-400 font-bold">15s</span></p>
+            <p id="tiktok-hint" class="text-xs text-gray-500 mt-2 text-center">Click the TikTok button first, then wait <span id="tiktok-timer" class="text-yellow-400 font-bold">15s</span></p>
         </div>
 
-        <!-- BƯỚC 2: YouTube -->
+        <!-- STEP 2: YouTube -->
         <div id="step-youtube" class="step-box mb-4 hidden">
             <div class="flex items-center gap-3 mb-4">
                 <span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)">
-                    📺 Bước 2 / 3
+                    📺 Step 2 / 3
                 </span>
                 <span class="text-sm text-gray-300 font-semibold">Subscribe YouTube</span>
             </div>
-            <p class="text-gray-400 text-sm mb-4">Subscribe kênh YouTube Moon Light Hub.</p>
+            <p class="text-gray-400 text-sm mb-4">Subscribe to the Moon Light Hub YouTube channel.</p>
             <a href="https://youtube.com/@moonlight.hub" target="_blank" id="youtube-link" class="btn-action btn-red mb-3" style="display:flex">
                 <i data-lucide="external-link" class="w-5 h-5"></i>
-                Mở YouTube để Subscribe
+                Open YouTube to Subscribe
             </a>
             <button id="confirm-youtube" class="btn-action btn-green" disabled>
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã Subscribe YouTube ✓
+                I subscribed to YouTube ✓
             </button>
-            <p id="youtube-hint" class="text-xs text-gray-500 mt-2 text-center">Bấm nút mở YouTube trước, sau đó chờ <span id="youtube-timer" class="text-yellow-400 font-bold">15s</span></p>
+            <p id="youtube-hint" class="text-xs text-gray-500 mt-2 text-center">Click the YouTube button first, then wait <span id="youtube-timer" class="text-yellow-400 font-bold">15s</span></p>
         </div>
 
-        <!-- BƯỚC 3: Discord -->
+        <!-- STEP 3: Discord -->
         <div id="step-discord" class="step-box mb-4 hidden">
             <div class="flex items-center gap-3 mb-4">
                 <span class="badge" style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3)">
-                    💬 Bước 3 / 3
+                    💬 Step 3 / 3
                 </span>
-                <span class="text-sm text-gray-300 font-semibold">Join 2 Discord Server</span>
+                <span class="text-sm text-gray-300 font-semibold">Join 2 Discord Servers</span>
             </div>
-            <p class="text-gray-400 text-sm mb-4">Join cả 2 server Discord của Moon Light Hub.</p>
+            <p class="text-gray-400 text-sm mb-4">Join both Moon Light Hub Discord servers.</p>
             <a href="https://discord.gg/79YqazgE6C" target="_blank" id="discord-link-1" class="btn-action btn-indigo mb-3" style="display:flex">
                 <i data-lucide="external-link" class="w-5 h-5"></i>
                 Join Server 1
@@ -125,7 +126,7 @@
                 <i data-lucide="external-link" class="w-5 h-5"></i>
                 Join Server 2
             </a>
-            <!-- reCAPTCHA xác minh trước khi lấy key -->
+            <!-- reCAPTCHA verification before getting key -->
             <div class="recaptcha-wrap">
                 <div class="g-recaptcha"
                     data-sitekey="6LdPZpMsAAAAAPHSnKvS96YwY3ou47dP4sENBSEw"
@@ -136,32 +137,32 @@
             </div>
             <button id="confirm-discord" class="btn-action btn-green" disabled>
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
-                Tôi đã join cả 2 server ✓
+                I joined both servers ✓
             </button>
-            <p class="text-xs text-gray-500 mt-2 text-center">Bấm cả 2 link Join + xác minh reCAPTCHA để tiếp tục</p>
+            <p class="text-xs text-gray-500 mt-2 text-center">Click both Join links + complete reCAPTCHA to continue</p>
         </div>
 
-        <!-- KẾT QUẢ: Tạo key -->
+        <!-- RESULT: Key generation -->
         <div id="step-result" class="hidden">
             <div class="text-center mb-6">
                 <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
                     <i data-lucide="party-popper" class="w-7 h-7 text-green-400"></i>
                 </div>
-                <p class="text-green-400 font-bold text-lg">Hoàn thành tất cả nhiệm vụ!</p>
-                <p class="text-gray-400 text-sm mt-1">Đang tạo link key của bạn...</p>
+                <p class="text-green-400 font-bold text-lg">All tasks completed!</p>
+                <p class="text-gray-400 text-sm mt-1">Generating your key link...</p>
             </div>
 
-            <!-- Trạng thái loading -->
+            <!-- Loading state -->
             <div id="result-loading" class="step-box text-center">
                 <div class="loader mx-auto mb-3"></div>
-                <p class="text-gray-400 text-sm">Đang kết nối server và tạo key...</p>
+                <p class="text-gray-400 text-sm">Connecting to server and generating key...</p>
             </div>
 
-            <!-- Key link thành công -->
+            <!-- Key link success -->
             <div id="result-success" class="hidden">
                 <p class="text-green-400 text-sm font-semibold mb-2 flex items-center gap-2">
                     <i data-lucide="link" class="w-4 h-4"></i>
-                    Link key của bạn (chỉ dùng 1 lần):
+                    Your key link (single-use only):
                 </p>
                 <div id="key-link-display" class="key-link-box mb-4"></div>
                 <div class="flex gap-3">
@@ -171,19 +172,19 @@
                     </button>
                     <button id="open-link-btn" class="btn-action btn-indigo flex-1">
                         <i data-lucide="external-link" class="w-5 h-5"></i>
-                        Mở Link
+                        Open Link
                     </button>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 text-center">
-                    ⚠️ Mỗi lần tạo sẽ ra link khác nhau — không chia sẻ link này!
+                    ⚠️ Each generation produces a unique link — do not share it!
                 </p>
             </div>
 
-            <!-- Lỗi server -->
+            <!-- Server error -->
             <div id="result-error" class="hidden step-box text-center">
                 <i data-lucide="wifi-off" class="w-8 h-8 text-orange-400 mx-auto mb-2"></i>
-                <p class="text-orange-400 font-semibold mb-1">Không kết nối được server</p>
-                <p class="text-gray-400 text-sm mb-4">Đang dùng chế độ offline. Link key vẫn hoạt động.</p>
+                <p class="text-orange-400 font-semibold mb-1">Cannot connect to server</p>
+                <p class="text-gray-400 text-sm mb-4">Running in offline mode. Key link still works.</p>
                 <div id="key-link-display-fallback" class="key-link-box mb-4"></div>
                 <div class="flex gap-3">
                     <button id="copy-link-btn-fallback" class="btn-action btn-green flex-1">
@@ -192,21 +193,21 @@
                     </button>
                     <button id="open-link-btn-fallback" class="btn-action btn-indigo flex-1">
                         <i data-lucide="external-link" class="w-5 h-5"></i>
-                        Mở Link
+                        Open Link
                     </button>
                 </div>
             </div>
         </div>
 
         <p class="text-xs text-gray-600 mt-6 text-center">
-            Moon Light Hub © 2026 | Key hệ thống xác thực qua token một lần
+            Moon Light Hub © 2026 | Keys verified via single-use token
         </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        // Tạo sao nền
+        // Create background stars
         (function() {
             const c = document.getElementById('stars');
             for (let i = 0; i < 55; i++) {
@@ -225,20 +226,20 @@
             setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
         }
 
-        // ── Xác thực token từ URL ──
-        // Chỉ accept ?token= — do getkey.html tự sinh và nhúng vào redirect URL
-        // KHÔNG accept ?hash= của Linkvertise (khác token, sẽ không khớp)
+        // ── Validate token from URL ──
+        // Only accept ?token= — generated by getkey.html and embedded in redirect URL
+        // Do NOT accept Linkvertise ?hash= (different from token, will not match)
         const urlParams = new URLSearchParams(window.location.search);
         const tokenFromUrl = urlParams.get('token');
         const storedToken = localStorage.getItem('lv_token');
         const tokenExpire = parseInt(localStorage.getItem('lv_token_expire') || '0');
         const visitedGetkey = localStorage.getItem('visited_getkey') === 'true';
 
-        // Hợp lệ KHI VÀ CHỈ KHI cả 3 điều kiện đúng:
-        // 1. Đã qua getkey.html
-        // 2. Còn trong 24 giờ
-        // 3. ?token= trong URL KHỚP CHÍNH XÁC với lv_token trong localStorage
-        //    → không thể tự bịa token, không thể dùng lại link cũ
+        // Valid IF AND ONLY IF all 3 conditions are met:
+        // 1. Passed through getkey.html
+        // 2. Within 24 hours
+        // 3. ?token= in URL EXACTLY MATCHES lv_token in localStorage
+        //    → cannot fabricate a token, cannot reuse old links
         const hasSession = visitedGetkey && Date.now() < tokenExpire;
         const tokenMatch = !!(tokenFromUrl && storedToken && tokenFromUrl === storedToken);
         const isValid = hasSession && tokenMatch;
@@ -247,19 +248,19 @@
             const denied = document.getElementById('access-denied');
             if (!tokenFromUrl) {
                 denied.querySelector('p').textContent =
-                    'Bạn phải bắt đầu từ trang lấy key và hoàn thành Linkvertise.';
+                    'You must start from the key page and complete Linkvertise.';
             } else if (visitedGetkey && Date.now() >= tokenExpire) {
                 denied.querySelector('p').textContent =
-                    'Session đã hết hạn (24 giờ). Vui lòng bắt đầu lại từ trang lấy key.';
+                    'Session expired (24 hours). Please start again from the key page.';
             } else if (!tokenMatch) {
                 denied.querySelector('p').textContent =
-                    'Token không hợp lệ hoặc đã được dùng rồi. Vui lòng lấy key mới.';
+                    'Token is invalid or already used. Please get a new key.';
             }
             denied.classList.remove('hidden');
             lucide.createIcons();
         } else {
-            // ✅ Hợp lệ — xóa TOÀN BỘ session ngay lập tức
-            // Sau bước này link getkey2?token=xxx này KHÔNG dùng lại được nữa
+            // ✅ Valid — immediately clear ALL session data
+            // After this step the getkey2?token=xxx link can NO LONGER be reused
             ['lv_token','lv_token_expire','visited_getkey','lv_start_time','lv_verified'].forEach(k => localStorage.removeItem(k));
 
             document.getElementById('main-flow').classList.remove('hidden');
@@ -267,10 +268,10 @@
             startFlow();
         }
 
-        // ── Flow nhiệm vụ ──
+        // ── Task flow ──
         let tiktokDone = false, youtubeDone = false, d1Clicked = false, d2Clicked = false, captcha2Passed = false;
 
-        // reCAPTCHA callbacks (step Discord)
+        // reCAPTCHA callbacks (Discord step)
         function onCaptchaSuccess2(token) {
             captcha2Passed = true;
             checkDiscordReady();
@@ -290,10 +291,10 @@
 
         function startFlow() {
             updateProgress(10);
-            setStatus('Bước 1/3: Follow TikTok để tiếp tục');
+            setStatus('Step 1/3: Follow TikTok to continue');
         }
 
-        // ── Helper: countdown timer trên nút ──
+        // ── Helper: countdown timer on button ──
         function startLinkTimer(timerElId, confirmBtnId, hintElId, seconds, onDone) {
             let remaining = seconds;
             const timerEl = document.getElementById(timerElId);
@@ -306,7 +307,7 @@
                 if (remaining <= 0) {
                     clearInterval(iv);
                     confirmBtn.disabled = false;
-                    if (hintEl) hintEl.innerHTML = '✅ Bạn có thể xác nhận bây giờ!';
+                    if (hintEl) hintEl.innerHTML = '✅ You can confirm now!';
                     if (hintEl) hintEl.classList.remove('text-gray-500');
                     if (hintEl) hintEl.classList.add('text-green-400');
                     if (onDone) onDone();
@@ -314,10 +315,10 @@
             }, 1000);
         }
 
-        // Bước 1: TikTok — chỉ bật confirm sau khi bấm link + chờ 15s
+        // Step 1: TikTok — only enable confirm after clicking link + waiting 15s
         let tiktokLinkClicked = false;
         document.getElementById('tiktok-link').addEventListener('click', () => {
-            if (tiktokLinkClicked) return; // chỉ chạy 1 lần
+            if (tiktokLinkClicked) return; // only run once
             tiktokLinkClicked = true;
             startLinkTimer('tiktok-timer', 'confirm-tiktok', 'tiktok-hint', 15);
         });
@@ -329,11 +330,11 @@
             document.getElementById('step-youtube').classList.remove('hidden');
             lucide.createIcons();
             updateProgress(35);
-            setStatus('Bước 2/3: Subscribe YouTube');
-            showToast('✓ Đã follow TikTok!');
+            setStatus('Step 2/3: Subscribe YouTube');
+            showToast('✓ Followed TikTok!');
         });
 
-        // Bước 2: YouTube — chỉ bật confirm sau khi bấm link + chờ 15s
+        // Step 2: YouTube — only enable confirm after clicking link + waiting 15s
         let youtubeLinkClicked = false;
         document.getElementById('youtube-link').addEventListener('click', () => {
             if (youtubeLinkClicked) return;
@@ -348,11 +349,11 @@
             document.getElementById('step-discord').classList.remove('hidden');
             lucide.createIcons();
             updateProgress(60);
-            setStatus('Bước 3/3: Join 2 Discord server');
-            showToast('✓ Đã subscribe YouTube!');
+            setStatus('Step 3/3: Join 2 Discord servers');
+            showToast('✓ Subscribed to YouTube!');
         });
 
-        // Bước 3: Discord — theo dõi click từng link
+        // Step 3: Discord — track clicks on each link
         document.getElementById('discord-link-1').addEventListener('click', () => {
             d1Clicked = true;
             checkDiscordReady();
@@ -373,12 +374,12 @@
             document.getElementById('step-result').classList.remove('hidden');
             lucide.createIcons();
             updateProgress(85);
-            setStatus('Đang tạo key...');
-            showToast('✓ Đã join cả 2 server!');
+            setStatus('Generating key...');
+            showToast('✓ Joined both servers!');
             createKey();
         });
 
-        // ── Tạo key qua server ──
+        // ── Create key via server ──
         async function createKey() {
             try {
                 const res = await fetch('/.netlify/functions/get-key', {
@@ -389,7 +390,7 @@
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (!data.token) throw new Error('Không nhận được token từ server');
+                if (!data.token) throw new Error('No token received from server');
 
                 const link = `${window.location.origin}/final-key.html?token=${encodeURIComponent(data.token)}`;
                 showSuccess(link, data.key);
@@ -399,11 +400,11 @@
             }
         }
 
-        // ── Lưu key vào manager (mlh_keys_v2) để admin thấy ──
+        // ── Save key to manager (mlh_keys_v2) for admin visibility ──
         function saveKeyToManager(key, source) {
             try {
                 const keys = JSON.parse(localStorage.getItem('mlh_keys_v2') || '[]');
-                // Không lưu trùng
+                // Skip duplicates
                 if (keys.some(k => k.key === key)) return;
                 keys.push({
                     key,
@@ -421,13 +422,13 @@
             lucide.createIcons();
             document.getElementById('key-link-display').textContent = link;
             updateProgress(100);
-            setStatus('✅ Key đã sẵn sàng!');
+            setStatus('✅ Key is ready!');
 
-            // Lưu vào manager
+            // Save to manager
             if (key) saveKeyToManager(key, 'server');
 
             document.getElementById('copy-link-btn').onclick = () => {
-                navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));
+                navigator.clipboard.writeText(link).then(() => showToast('✓ Key link copied!')).catch(() => showToast('Copy failed', 'error'));
             };
             document.getElementById('open-link-btn').onclick = () => window.open(link, '_blank');
         }
@@ -449,13 +450,13 @@
             lucide.createIcons();
             document.getElementById('key-link-display-fallback').textContent = link;
             updateProgress(100);
-            setStatus('⚠️ Offline mode — key vẫn hoạt động');
+            setStatus('⚠️ Offline mode — key still works');
 
-            // Lưu vào manager
+            // Save to manager
             saveKeyToManager(fallbackKey, 'fallback');
 
             document.getElementById('copy-link-btn-fallback').onclick = () => {
-                navigator.clipboard.writeText(link).then(() => showToast('✓ Đã copy link key!')).catch(() => showToast('Copy thất bại', 'error'));
+                navigator.clipboard.writeText(link).then(() => showToast('✓ Key link copied!')).catch(() => showToast('Copy failed', 'error'));
             };
             document.getElementById('open-link-btn-fallback').onclick = () => window.open(link, '_blank');
         }

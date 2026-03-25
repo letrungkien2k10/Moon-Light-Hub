@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+    <link rel="icon" type="image/png" href="moonlight.png" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -194,13 +195,13 @@
                     <span class="text-xl font-bold tracking-tight">Moon Light Hub</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Trang chủ</a>
+                    <a href="#home" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Home</a>
                     <a href="#servers" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Server</a>
-                    <a href="#features" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Tính năng</a>
+                    <a href="#features" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Features</a>
                     <a href="#team" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Admin</a>
-                    <a href="#scripts" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Code</a>
+                    <a href="#scripts" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Script</a>
                     <button onclick="scrollToServers()" class="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm font-semibold transition-all transform hover:scale-105">
-                        Tham gia ngay
+                        Join Now
                     </button>
                 </div>
                 <button class="md:hidden text-white" onclick="toggleMobileMenu()">
@@ -211,9 +212,9 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-black/90 border-t border-white/10">
             <div class="px-4 pt-2 pb-3 space-y-1">
-                <a href="#home" class="block px-3 py-2 text-gray-300 hover:text-white">Trang chủ</a>
+                <a href="#home" class="block px-3 py-2 text-gray-300 hover:text-white">Home</a>
                 <a href="#servers" class="block px-3 py-2 text-gray-300 hover:text-white">Server</a>
-                <a href="#features" class="block px-3 py-2 text-gray-300 hover:text-white">Tính năng</a>
+                <a href="#features" class="block px-3 py-2 text-gray-300 hover:text-white">Features</a>
                 <a href="#team" class="block px-3 py-2 text-gray-300 hover:text-white">Admin</a>
                 <a href="#scripts" class="block px-3 py-2 text-gray-300 hover:text-white">Code</a>
             </div>
@@ -237,16 +238,16 @@
                 <span class="gradient-text">Moon Light Hub</span>
             </h1>
             <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Cộng đồng Discord sôi động với 2 server chính thức. Kết nối, chia sẻ và cùng nhau phát triển! 🚀
+                A vibrant Discord community with 2 official servers. Connect, share, and grow together! 🚀
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                 <button onclick="scrollToServers()" class="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-indigo-500/30 flex items-center gap-2">
                     <i data-lucide="users" class="w-5 h-5"></i>
-                    Tham gia cộng đồng
+                    Join the Community
                 </button>
                 <button onclick="scrollToFeatures()" class="px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white font-semibold text-lg transition-all backdrop-blur-sm flex items-center gap-2">
                     <i data-lucide="info" class="w-5 h-5"></i>
-                    Tìm hiểu thêm
+                    Learn More
                 </button>
             </div>
             
@@ -254,10 +255,10 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
                 <div class="glass-card rounded-2xl p-6 hover-scale">
                     <div class="text-3xl font-bold text-indigo-400 mb-1 flex items-center justify-center gap-2">
-                        <span id="discord-members">10,000+</span>
+                        <span id="discord-members">800+</span>
                         <i data-lucide="users" class="w-6 h-6 text-indigo-400 inline"></i>
                     </div>
-                    <div class="text-gray-400 text-sm">Thành viên Discord</div>
+                    <div class="text-gray-400 text-sm">Discord Members</div>
                     <div class="text-xs text-gray-500 mt-1 flex items-center justify-center gap-1">
                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                         <span id="online-members">Online: --</span>
@@ -265,11 +266,11 @@
                 </div>
                 <div class="glass-card rounded-2xl p-6 hover-scale">
                     <div class="text-3xl font-bold text-purple-400 mb-1">24/7</div>
-                    <div class="text-gray-400 text-sm">Hoạt động</div>
+                    <div class="text-gray-400 text-sm">Active</div>
                 </div>
                 <div class="glass-card rounded-2xl p-6 hover-scale">
                     <div class="text-3xl font-bold text-pink-400 mb-1">100%</div>
-                    <div class="text-gray-400 text-sm">Miễn phí</div>
+                    <div class="text-gray-400 text-sm">Free</div>
                 </div>
             </div>
         </div>
@@ -279,8 +280,8 @@
     <section id="servers" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Các Server Discord</h2>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Chọn server phù hợp với bạn và tham gia ngay hôm nay!</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Discord Servers</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Choose the server that suits you and join today!</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -298,32 +299,32 @@
                                     <h3 class="text-2xl font-bold text-white">Moon Light Hub True 1</h3>
                                     <span class="text-indigo-400 text-sm flex items-center gap-1">
                                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                        Đang hoạt động
+                                        Active
                                     </span>
                                 </div>
                             </div>
                             <i data-lucide="crown" class="w-6 h-6 text-yellow-500"></i>
                         </div>
                         <p class="text-gray-300 mb-6 leading-relaxed">
-                            Server chính thức đầu tiên của cộng đồng. Nơi tụ họp của những thành viên nòng cốt và hoạt động sôi nổi nhất.
+                            The first official server of the community. The gathering place for core members and the most active discussions.
                         </p>
                         <div class="space-y-3 mb-8">
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-indigo-400"></i>
-                                <span>Nhiều Script Vip Pro</span>
+                                <span>Premium VIP Scripts</span>
                             </div>
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-indigo-400"></i>
-                                <span>Hỗ trợ 24/7 từ Admin & Mod</span>
+                                <span>24/7 support from Admins & Mods</span>
                             </div>
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-indigo-400"></i>
-                                <span>Notify luôn hoạt động 24/7</span>
+                                <span>Notifications active 24/7</span>
                             </div>
                         </div>
                         <button onclick="joinServer('https://discord.com/invite/79YqazgE6C')" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25">
                             <i data-lucide="log-in" class="w-5 h-5"></i>
-                            Tham gia Server 1
+                            Join Server 1
                         </button>
                     </div>
                 </div>
@@ -342,7 +343,7 @@
                                     <h3 class="text-2xl font-bold text-white">Moon Light Hub True 2</h3>
                                     <span class="text-purple-400 text-sm flex items-center gap-1">
                                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                        Đang hoạt động
+                                        Active
                                     </span>
                                 </div>
                             </div>
@@ -350,27 +351,27 @@
                         </div>
                         
                         <p class="text-gray-300 mb-6 leading-relaxed">
-                            Server thứ hai với không gian mới mẻ, dành cho những ai muốn trải nghiệm cộng đồng từ đầu và kết nối chặt chẽ hơn.
+                            The second server with a fresh space, for those who want to experience the community from the ground up and connect more closely.
                         </p>
 
                         <div class="space-y-3 mb-8">
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i>
-                                <span>Nhiều loại script đa dạng và cao cấp hơn True 1</span>
+                                <span>More diverse and advanced scripts than True 1</span>
                             </div>
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i>
-                                <span>Script được cập nhật thường xuyên</span>
+                                <span>Scripts updated regularly</span>
                             </div>
                             <div class="flex items-center gap-3 text-gray-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i>
-                                <span>Notify luôn hoạt động 24/7</span>
+                                <span>Notifications active 24/7</span>
                             </div>
                         </div>
 
                         <button onclick="joinServer('https://discord.com/invite/3bS7hjJ9es')" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25">
                             <i data-lucide="log-in" class="w-5 h-5"></i>
-                            Tham gia Server 2
+                            Join Server 2
                         </button>
                     </div>
                 </div>
@@ -382,8 +383,8 @@
     <section id="features" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Tại sao chọn Moon Light?</h2>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Những gì bạn sẽ nhận được khi tham gia cộng đồng của chúng tôi</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Why Choose Moon Light?</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">What you get when you join our community</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
@@ -391,48 +392,48 @@
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
                         <i data-lucide="shield-check" class="w-7 h-7 text-indigo-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">An toàn & Bảo mật</h3>
-                    <p class="text-gray-400">Hệ thống moderation chặt chẽ, chống spam và scam hiệu quả để bạn yên tâm trò chuyện.</p>
+                    <h3 class="text-xl font-bold mb-2">Safe & Secure</h3>
+                    <p class="text-gray-400">Strict moderation system with effective anti-spam and anti-scam to keep your experience safe.</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center hover-scale">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-purple-500/20 flex items-center justify-center">
                         <i data-lucide="zap" class="w-7 h-7 text-purple-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Cập nhật Nhanh chóng</h3>
-                    <p class="text-gray-400">Luôn cập nhật thông tin mới nhất, nhanh nhất đến tay cộng đồng.</p>
+                    <h3 class="text-xl font-bold mb-2">Fast Updates</h3>
+                    <p class="text-gray-400">Always delivering the latest information to the community as quickly as possible.</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center hover-scale">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-pink-500/20 flex items-center justify-center">
                         <i data-lucide="heart" class="w-7 h-7 text-pink-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Cộng đồng Thân thiện</h3>
-                    <p class="text-gray-400">Môi trường tôn trọng lẫn nhau, nơi mọi người sẵn sàng giúp đỡ và chia sẻ.</p>
+                    <h3 class="text-xl font-bold mb-2">Friendly Community</h3>
+                    <p class="text-gray-400">A respectful environment where everyone is ready to help and share.</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center hover-scale">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-blue-500/20 flex items-center justify-center">
                         <i data-lucide="bot" class="w-7 h-7 text-blue-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Bot Tùy chỉnh</h3>
-                    <p class="text-gray-400">Hệ thống bot thông minh phục vụ nhiều nhu cầu giải trí và hỗ trợ thành viên.</p>
+                    <h3 class="text-xl font-bold mb-2">Custom Bots</h3>
+                    <p class="text-gray-400">Smart bot systems serving a wide range of entertainment and member support needs.</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center hover-scale">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-yellow-500/20 flex items-center justify-center">
                         <i data-lucide="gift" class="w-7 h-7 text-yellow-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Sự kiện & Quà tặng</h3>
-                    <p class="text-gray-400">Các mini-game, event và giveaway được tổ chức thường xuyên cho cộng đồng.</p>
+                    <h3 class="text-xl font-bold mb-2">Events & Giveaways</h3>
+                    <p class="text-gray-400">Mini-games, events and giveaways are regularly held for the community.</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center hover-scale">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
                         <i data-lucide="headphones" class="w-7 h-7 text-green-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Hỗ trợ Tận tâm</h3>
-                    <p class="text-gray-400">Đội ngũ Staff chuyên nghiệp, sẵn sàng giải đáp thắc mắc 24/7.</p>
+                    <h3 class="text-xl font-bold mb-2">Dedicated Support</h3>
+                    <p class="text-gray-400">Professional staff team, ready to answer questions 24/7.</p>
                 </div>
             </div>
         </div>
@@ -442,8 +443,8 @@
     <section id="team" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Đội ngũ Quản trị</h2>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Gặp gỡ 2 Developer chính đứng sau Moon Light Hub</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Admin Team</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Meet the 2 main developers behind Moon Light Hub</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -465,7 +466,7 @@
                             <span class="px-4 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm font-semibold border border-indigo-500/30 mb-4">Founder & Lead Dev</span>
                             
                             <p class="text-gray-300 mb-6 leading-relaxed">
-                                Xin chào, tôi là Kiên, người sáng lập và là developer chính của Moon Light Hub - một script hack roblox. Tui mới chỉ comback với code sau một khoảng thời gian nghỉ khá dài. Nếu Script có gì hơi lỗi thì mong mọi người thông cảm, vì mình cũng mới code lại sau một thời gian dài nghỉ. Mình sẽ cố gắng update và fix lỗi nhanh nhất có thể. Cảm ơn mọi người đã ủng hộ và sử dụng sản phẩm của mình!
+                                Hi, I'm Kien, the founder and lead developer of Moon Light Hub — a Roblox script hub. I've only just made a comeback to coding after quite a long break. If any scripts have issues, I hope everyone understands, as I'm just getting back into it after a long hiatus. I'll do my best to update and fix bugs as quickly as possible. Thank you all for your support and for using my work!
                             </p>
 
                             <div class="flex gap-4">
@@ -501,7 +502,7 @@
                             <span class="px-4 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-semibold border border-purple-500/30 mb-4">Co-Founder & Dev</span>
                             
                             <p class="text-gray-300 mb-6 leading-relaxed">
-                                Trong thế giới của những dòng lệnh,Thái không chỉ viết code; anh ta xây dựng những kiến trúc bằng logic. Với Thái, bàn phím là một loại nhạc cụ mà mỗi cú gõ đều hướng tới sự tối ưu tuyệt đối. Anh có khả năng nhìn thấu những lỗi logic phức tạp nhất như cách người ta nhìn qua một tấm kính trong suốt. Châm ngôn sống? 'Code không chạy là lỗi của ta, nhưng code chạy mà không hiểu tại sao mới là thảm họa.
+                                In the world of code, Thai doesn't just write lines — he builds architectures out of logic. To Thai, a keyboard is an instrument where every keystroke aims for absolute optimization. He can see through the most complex logical errors like looking through a pane of clear glass. Life motto? 'Code that doesn't run is your fault, but code that runs and you don't know why — that's the real disaster.'
                             </p>
 
                             <div class="flex gap-4">
@@ -524,7 +525,7 @@
             <div class="mt-12 text-center">
                 <div class="inline-flex items-center gap-2 glass-card rounded-full px-6 py-3">
                     <i data-lucide="shield" class="w-5 h-5 text-indigo-400"></i>
-                    <span class="text-gray-300 text-sm">Đội ngũ Admin hoạt động 24/7 để hỗ trợ cộng đồng</span>
+                    <span class="text-gray-300 text-sm">Admin team active 24/7 to support the community</span>
                 </div>
             </div>
         </div>
@@ -539,8 +540,8 @@
                     <i data-lucide="bell" class="w-6 h-6 text-indigo-400"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-white mb-1">🔔 Thông báo từ Server</h3>
-                    <p class="text-gray-300 text-sm">Cập nhật script mới nhất và thông báo quan trọng sẽ được gửi trực tiếp qua Discord. Đảm bảo bạn không bỏ lỡ bất kỳ tính năng mới nào!</p>
+                    <h3 class="text-lg font-bold text-white mb-1">🔔 Server Announcement</h3>
+                    <p class="text-gray-300 text-sm">The latest script updates and important announcements will be sent directly via Discord. Make sure you never miss any new features!</p>
                 </div>
             </div>
 
@@ -549,11 +550,11 @@
                 <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center">
                     <div class="relative flex-1 w-full">
                         <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></i>
-                        <input type="text" id="script-search" placeholder="Tìm kiếm script..." 
+                        <input type="text" id="script-search" placeholder="Search scripts..." 
                             class="search-input w-full bg-black/30 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 transition-all">
                     </div>
                     <div class="flex gap-2 flex-wrap justify-center">
-                        <button onclick="filterScripts('all')" class="filter-btn active px-4 py-2 rounded-lg bg-indigo-500/20 text-indigo-400 text-sm font-medium border border-indigo-500/30 hover:bg-indigo-500/30 transition-all" data-filter="all">Tất cả</button>
+                        <button onclick="filterScripts('all')" class="filter-btn active px-4 py-2 rounded-lg bg-indigo-500/20 text-indigo-400 text-sm font-medium border border-indigo-500/30 hover:bg-indigo-500/30 transition-all" data-filter="all">All</button>
                         <button onclick="filterScripts('Main')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="Main">Main</button>
                         <button onclick="filterScripts('Auto Bounty')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="Auto Bounty">Auto Bounty</button>
                         <button onclick="filterScripts('Tools')" class="filter-btn px-4 py-2 rounded-lg bg-white/5 text-gray-400 text-sm font-medium border border-white/10 hover:bg-white/10 transition-all" data-filter="Tools">Tools</button>
@@ -563,13 +564,13 @@
                     </div>
                 </div>
                 <div class="mt-3 text-center text-sm text-gray-500">
-                    <span id="script-count">Hiển thị 10 script</span>
+                    <span id="script-count">Showing 10 scripts</span>
                 </div>
             </div>
 
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Kho Script</h2>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Nhiều loại script đa dạng - Copy và sử dụng ngay. Click để copy code vào clipboard!</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Script Library</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">A wide variety of scripts — copy and use instantly. Click to copy code to clipboard!</p>
             </div>
 
             <div id="scripts-grid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -580,8 +581,8 @@
                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
                     <i data-lucide="search-x" class="w-8 h-8 text-gray-400"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-300 mb-2">Không tìm thấy script</h3>
-                <p class="text-gray-500">Thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác</p>
+                <h3 class="text-xl font-bold text-gray-300 mb-2">No scripts found</h3>
+                <p class="text-gray-500">Try searching with a different keyword or select another category</p>
             </div>
 
             <!-- Usage Note -->
@@ -591,8 +592,8 @@
                         <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400"></i>
                     </div>
                     <div>
-                        <h4 class="text-lg font-bold text-white mb-2">Lưu ý sử dụng</h4>
-                        <p class="text-gray-400 text-sm">Các script được cung cấp cho mục đích học tập và phát triển. Hãy sử dụng có trách nhiệm và tuân thủ quy định của từng nền tảng. Server sẽ thông báo ngay khi có cập nhật mới qua kênh Discord.</p>
+                        <h4 class="text-lg font-bold text-white mb-2">Usage Notice</h4>
+                        <p class="text-gray-400 text-sm">Scripts are provided for educational and development purposes. Please use them responsibly and follow the rules of each platform. The server will notify immediately when new updates are available via the Discord channel.</p>
                     </div>
                 </div>
             </div>
@@ -603,20 +604,20 @@
     <section id="faq" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Câu hỏi thường gặp</h2>
-                <p class="text-gray-400 text-lg">Giải đáp thắc mắc phổ biến về script và cộng đồng</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-400 text-lg">Answers to common questions about scripts and the community</p>
             </div>
 
             <div class="glass-card rounded-2xl p-6 md:p-8">
                 <!-- FAQ Item 1 -->
                 <div class="faq-item py-4">
                     <div class="faq-question flex items-center justify-between" onclick="toggleFaq(this)">
-                        <h3 class="text-lg font-semibold text-white pr-4">Làm sao để execute (chạy) script?</h3>
+                        <h3 class="text-lg font-semibold text-white pr-4">How do I execute (run) a script?</h3>
                         <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-indigo-400 flex-shrink-0"></i>
                     </div>
                     <div class="faq-answer">
                         <p class="text-gray-400 pt-3 pb-2 pl-0 leading-relaxed">
-                            Bạn cần tải về một Roblox Executor như Synapse X, Krnl, Fluxus, hoặc Delta. Sau đó copy script từ website, dán vào executor và nhấn Execute/Inject. Mỗi executor có cách sử dụng khác nhau, bạn có thể vào Discord server để được hướng dẫn chi tiết.
+                            You need to download a Roblox Executor such as Synapse X, Krnl, Fluxus, or Delta. Then copy the script from the website, paste it into the executor and press Execute/Inject. Each executor works differently — join the Discord server for detailed guidance.
                         </p>
                     </div>
                 </div>
@@ -624,12 +625,12 @@
                 <!-- FAQ Item 2 -->
                 <div class="faq-item py-4">
                     <div class="faq-question flex items-center justify-between" onclick="toggleFaq(this)">
-                        <h3 class="text-lg font-semibold text-white pr-4">Sử dụng script có bị ban (band) không?</h3>
+                        <h3 class="text-lg font-semibold text-white pr-4">Can using scripts get me banned?</h3>
                         <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-indigo-400 flex-shrink-0"></i>
                     </div>
                     <div class="faq-answer">
                         <p class="text-gray-400 pt-3 pb-2 pl-0 leading-relaxed">
-                            Có rủi ro bị ban nếu sử dụng script một cách thô bạo hoặc trong các game có hệ thống anti-cheat mạnh. Chúng tôi khuyên nên sử dụng tài khoản phụ (alt account) để test trước, và không sử dụng script quá lộ liễu. Một số script có tính năng anti-detection nhưng không đảm bảo 100%.
+                            There is a risk of being banned if you use scripts aggressively or in games with strong anti-cheat systems. We recommend using an alt account to test first and not using scripts too obviously. Some scripts have anti-detection features but cannot guarantee 100% safety.
                         </p>
                     </div>
                 </div>
@@ -637,12 +638,12 @@
                 <!-- FAQ Item 3 -->
                 <div class="faq-item py-4">
                     <div class="faq-question flex items-center justify-between" onclick="toggleFaq(this)">
-                        <h3 class="text-lg font-semibold text-white pr-4">Script này hỗ trợ executor nào?</h3>
+                        <h3 class="text-lg font-semibold text-white pr-4">Which executors are supported?</h3>
                         <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-indigo-400 flex-shrink-0"></i>
                     </div>
                     <div class="faq-answer">
                         <p class="text-gray-400 pt-3 pb-2 pl-0 leading-relaxed">
-                            Hầu hết script trên website đều tương thích với các executor phổ biến: Synapse X (paid), Krnl (free), Fluxus (free), Delta (free), và Codex (free). Nếu script không chạy trên executor của bạn, hãy thử cập nhật executor lên phiên bản mới nhất hoặc liên hệ Discord để được hỗ trợ.
+                            Most scripts on the website are compatible with popular executors: Synapse X (paid), Krnl (free), Fluxus (free), Delta (free), and Codex (free). If a script does not run on your executor, try updating it to the latest version or contact Discord for support.
                         </p>
                     </div>
                 </div>
@@ -650,12 +651,12 @@
                 <!-- FAQ Item 4 -->
                 <div class="faq-item py-4">
                     <div class="faq-question flex items-center justify-between" onclick="toggleFaq(this)">
-                        <h3 class="text-lg font-semibold text-white pr-4">Key system hoạt động thế nào?</h3>
+                        <h3 class="text-lg font-semibold text-white pr-4">How does the key system work?</h3>
                         <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-indigo-400 flex-shrink-0"></i>
                     </div>
                     <div class="faq-answer">
                         <p class="text-gray-400 pt-3 pb-2 pl-0 leading-relaxed">
-                            Một số script yêu cầu key để sử dụng. Key có thể lấy miễn phí qua linkvertise hoặc các trang rút gọn link. Sau khi vượt link, bạn sẽ nhận được key có hiệu lực trong 24h-48h. Key giúp developer có thu nhập để duy trì và cập nhật script. Hãy vào Discord để nhận key nhanh hơn!
+                            Some scripts require a key to use. Keys can be obtained for free via Linkvertise or other link shortener pages. After completing the link, you will receive a key valid for 24–48 hours. Keys help the developer earn income to maintain and update scripts. Join Discord to get your key faster!
                         </p>
                     </div>
                 </div>
@@ -663,22 +664,22 @@
                 <!-- FAQ Item 5 -->
                 <div class="faq-item py-4 border-b-0">
                     <div class="faq-question flex items-center justify-between" onclick="toggleFaq(this)">
-                        <h3 class="text-lg font-semibold text-white pr-4">Script bị lỗi không chạy phải làm sao?</h3>
+                        <h3 class="text-lg font-semibold text-white pr-4">What should I do if a script is broken or won't run?</h3>
                         <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-indigo-400 flex-shrink-0"></i>
                     </div>
                     <div class="faq-answer">
                         <p class="text-gray-400 pt-3 pb-2 pl-0 leading-relaxed">
-                            Đầu tiên hãy đảm bảo executor của bạn đã được cập nhật. Nếu vẫn lỗi, hãy thử các bước: 1) Rejoin server mới, 2) Chạy script ở màn hình chính trước khi vào game, 3) Kiểm tra xem game có bị cập nhật patch chống hack mới không. Nếu vẫn không được, báo lỗi trong kênh #bug-report trên Discord để admin fix.
+                            First make sure your executor is up to date. If it still fails, try these steps: 1) Rejoin a new server, 2) Run the script at the main screen before entering the game, 3) Check if the game has received a new anti-cheat patch. If it still doesn't work, report the bug in the #bug-report channel on Discord for the admin to fix.
                         </p>
                     </div>
                 </div>
             </div>
             
             <div class="mt-8 text-center">
-                <p class="text-gray-400 mb-4">Vẫn còn thắc mắc?</p>
+                <p class="text-gray-400 mb-4">Still have questions?</p>
                 <a href="#servers" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all">
                     <i data-lucide="message-circle" class="w-5 h-5"></i>
-                    Hỏi trên Discord
+                    Ask on Discord
                 </a>
             </div>
         </div>
@@ -747,7 +748,7 @@
 
         // Join server function
         function joinServer(url) {
-            // Thay thế URL bằng link Discord thật của bạn
+            // Replace URL with your actual Discord link
             window.open(url, '_blank');
         }
 
@@ -755,14 +756,14 @@
         function copyCode(elementId, scriptName = 'Code') {
             const codeElement = document.getElementById(elementId);
             if (!codeElement) {
-                showToast('Lỗi: Không tìm thấy code', 'error');
+                showToast('Error: Code element not found', 'error');
                 return;
             }
             
             const codeText = codeElement.innerText;
             
             navigator.clipboard.writeText(codeText).then(() => {
-                showToast('✓ ' + scriptName + ' đã copy!', 'success');
+                showToast('✓ ' + scriptName + ' copied!', 'success');
                 console.log('Code copied: ' + elementId);
             }).catch(err => {
                 console.error('Failed to copy:', err);
@@ -774,9 +775,9 @@
                     textArea.select();
                     document.execCommand("copy");
                     document.body.removeChild(textArea);
-                    showToast('✓ ' + scriptName + ' đã copy!', 'success');
+                    showToast('✓ ' + scriptName + ' copied!', 'success');
                 } catch (e) {
-                    showToast('Lỗi khi copy code', 'error');
+                    showToast('Failed to copy code', 'error');
                 }
             });
         }
@@ -844,7 +845,7 @@
             });
             
             // Update count
-            document.getElementById('script-count').innerText = `Hiển thị ${visibleCount} script`;
+            document.getElementById('script-count').innerText = `Showing ${visibleCount} scripts`;
         }
 
         // Toggle FAQ accordion
@@ -950,7 +951,7 @@
                             <div class="flex items-center gap-4 text-sm text-gray-400">
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="download" class="w-4 h-4"></i>
-                                    ${script.downloads || 0} lần tải
+                                    ${script.downloads || 0} downloads
                                 </span>
                             </div>
                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400">${script.status}</span>
@@ -960,7 +961,7 @@
                     scriptsGrid.appendChild(scriptCard);
                 });
 
-                document.getElementById('script-count').innerText = `Hiển thị ${uploadedScripts.length} script`;
+                document.getElementById('script-count').innerText = `Showing ${uploadedScripts.length} scripts`;
 
                 // Re-initialize Lucide icons for new elements
                 if (window.lucide) {

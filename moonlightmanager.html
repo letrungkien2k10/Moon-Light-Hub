@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="moonlight.png" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -64,18 +65,18 @@
     <header style="background:rgba(4,12,35,0.45);backdrop-filter:blur(8px);border-radius:14px;padding:0.75rem 1rem;position:relative;z-index:2;" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div>
         <h1 class="text-2xl font-extrabold tracking-tight">🌙 Moon Light Hub Manager</h1>
-        <p class="text-xs text-slate-400 mt-0.5">Quản lý key, script và thống kê hệ thống</p>
+        <p class="text-xs text-slate-400 mt-0.5">Manage keys, scripts and system stats</p>
       </div>
-      <button id="logout-btn" class="btn-danger px-4 py-2 self-start sm:self-auto hidden">Đăng xuất</button>
+      <button id="logout-btn" class="btn-danger px-4 py-2 self-start sm:self-auto hidden">Logout</button>
     </header>
 
     <!-- Auth panel -->
     <div id="auth-panel" class="card glass p-6 max-w-sm mx-auto">
       <h2 class="text-lg font-bold mb-1 flex items-center gap-2">
         <i data-lucide="lock" class="w-5 h-5 text-indigo-400"></i>
-        Đăng nhập Admin
+        Admin Login
       </h2>
-      <input id="pw-input" type="password" placeholder="Nhập mật khẩu..." class="input-base mb-3" />
+      <input id="pw-input" type="password" placeholder="Enter password..." class="input-base mb-3" />
       <!-- reCAPTCHA -->
       <div style="display:flex;justify-content:center;margin-bottom:0.75rem;">
         <div class="g-recaptcha"
@@ -85,8 +86,8 @@
           data-theme="dark">
         </div>
       </div>
-      <button id="login-btn" class="btn-primary w-full" disabled>Đăng nhập</button>
-      <p id="auth-err" class="mt-2 text-xs text-red-400 hidden">❌ Mật khẩu không đúng. Thử lại.</p>
+      <button id="login-btn" class="btn-primary w-full" disabled>Login</button>
+      <p id="auth-err" class="mt-2 text-xs text-red-400 hidden">❌ Incorrect password. Try again.</p>
     </div>
 
     <!-- Dashboard -->
@@ -95,84 +96,84 @@
       <!-- Stats -->
       <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="card glass p-4 text-center">
-          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Key đang hoạt động</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Active Keys</p>
           <p id="stat-active" class="text-3xl font-extrabold text-green-400">0</p>
         </div>
         <div class="card glass p-4 text-center">
-          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Key vĩnh viễn</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Permanent Keys</p>
           <p id="stat-perm" class="text-3xl font-extrabold text-indigo-400">0</p>
         </div>
         <div class="card glass p-4 text-center">
-          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Tổng script</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Total Scripts</p>
           <p id="stat-scripts" class="text-3xl font-extrabold text-purple-400">0</p>
         </div>
         <div class="card glass p-4 text-center">
-          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Cập nhật lúc</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Updated at</p>
           <p id="stat-time" class="text-sm font-mono text-slate-300 mt-1">-</p>
         </div>
       </section>
 
-      <!-- Tạo key -->
+      <!-- Create key -->
       <section class="card glass p-5">
         <h3 class="font-bold text-base mb-4 flex items-center gap-2">
           <i data-lucide="plus-circle" class="w-5 h-5 text-green-400"></i>
-          Tạo Key mới
+          Create New Key
         </h3>
         <div class="grid gap-3 sm:grid-cols-3">
-          <input id="new-key-input" type="text" placeholder="Key tùy chỉnh (để trống = tự động)" class="input-base" />
+          <input id="new-key-input" type="text" placeholder="Custom key (leave blank = auto)" class="input-base" />
           <select id="ttl-select" class="input-base">
-            <option value="3600">1 giờ</option>
-            <option value="86400" selected>24 giờ</option>
-            <option value="604800">7 ngày</option>
-            <option value="2592000">30 ngày</option>
-            <option value="0">Vĩnh viễn</option>
+            <option value="3600">1 hour</option>
+            <option value="86400" selected>24 hours</option>
+            <option value="604800">7 days</option>
+            <option value="2592000">30 days</option>
+            <option value="0">Permanent</option>
           </select>
           <button id="create-key-btn" class="btn-success">
             <i data-lucide="plus" class="w-4 h-4 inline mr-1"></i>
-            Tạo Key
+            Create Key
           </button>
         </div>
         <div id="created-key-display" class="hidden mt-3 p-3 bg-green-500/10 border border-green-500/25 rounded-lg">
-          <p class="text-xs text-green-400 mb-1">✓ Key đã tạo:</p>
+          <p class="text-xs text-green-400 mb-1">✓ Key created:</p>
           <code id="created-key-text" class="text-sm text-green-300 mono break-all"></code>
         </div>
       </section>
 
-      <!-- Danh sách key admin tạo -->
+      <!-- Admin manually created keys list -->
       <section class="card glass p-5">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-base flex items-center gap-2">
             <i data-lucide="list" class="w-5 h-5 text-indigo-400"></i>
-            Key Admin tạo thủ công
+            Manually Created Admin Keys
           </h3>
           <button id="refresh-btn" class="btn-primary text-xs px-3 py-1.5">
             <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i>
-            Làm mới
+            Refresh
           </button>
         </div>
         <div id="keys-list" class="space-y-2 text-sm"></div>
       </section>
 
-      <!-- Key hệ thống từ Netlify Blobs -->
+      <!-- System keys from Netlify Blobs -->
       <section class="card glass p-5">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-base flex items-center gap-2">
             <i data-lucide="database" class="w-5 h-5 text-cyan-400"></i>
-            Key hệ thống (từ Blobs)
+            System Keys (from Blobs)
             <span id="blobs-count" class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">0</span>
           </h3>
           <button id="fetch-blobs-btn" class="btn-primary text-xs px-3 py-1.5" style="background:linear-gradient(to right,#0891b2,#0e7490)">
             <i data-lucide="cloud-download" class="w-3 h-3 inline mr-1"></i>
-            Tải từ server
+            Load from server
           </button>
         </div>
-        <!-- Key hôm nay -->
+        <!-- Today's key -->
         <div class="mb-4 p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
-          <p class="text-xs text-cyan-400 mb-1 font-semibold">🔑 Key hôm nay (daily key):</p>
-          <code id="today-key-display" class="text-sm text-cyan-200 mono break-all">Bấm "Tải từ server" để xem</code>
+          <p class="text-xs text-cyan-400 mb-1 font-semibold">🔑 Today's key (daily key):</p>
+          <code id="today-key-display" class="text-sm text-cyan-200 mono break-all">Click "Load from server" to view</code>
         </div>
         <div id="blobs-keys-list" class="space-y-2 text-sm">
-          <p class="text-slate-400 text-sm">Bấm "Tải từ server" để xem danh sách key user đã lấy.</p>
+          <p class="text-slate-400 text-sm">Click "Load from server" to view the list of keys retrieved by users.</p>
         </div>
       </section>
 
@@ -183,7 +184,7 @@
           Upload Script
         </h3>
         <div class="grid gap-3">
-          <input id="s-name" type="text" placeholder="Tên script" class="input-base" />
+          <input id="s-name" type="text" placeholder="Script name" class="input-base" />
           <div class="grid sm:grid-cols-2 gap-3">
             <select id="s-category" class="input-base">
               <option value="main">Main</option>
@@ -193,9 +194,9 @@
               <option value="hop">Hop</option>
               <option value="pvp">PvP</option>
             </select>
-            <input id="s-desc" type="text" placeholder="Mô tả ngắn" class="input-base" />
+            <input id="s-desc" type="text" placeholder="Short description" class="input-base" />
           </div>
-          <textarea id="s-code" rows="5" placeholder="Paste code Lua / JS tại đây..." class="input-base font-mono text-xs resize-y"></textarea>
+          <textarea id="s-code" rows="5" placeholder="Paste Lua / JS code here..." class="input-base font-mono text-xs resize-y"></textarea>
           <button id="upload-btn" class="btn-primary">
             <i data-lucide="upload" class="w-4 h-4 inline mr-1"></i>
             Upload Script
@@ -204,29 +205,29 @@
         <p id="upload-msg" class="mt-2 text-xs text-green-400 hidden"></p>
       </section>
 
-      <!-- Key đã dùng (từ Netlify Blobs) -->
+      <!-- Used keys (from Netlify Blobs) -->
       <section class="card glass p-5">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-base flex items-center gap-2">
             <i data-lucide="history" class="w-5 h-5 text-yellow-400"></i>
-            Key đã được dùng
+            Keys Used
             <span id="used-keys-count" class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">0</span>
           </h3>
           <button id="refresh-used-btn" class="btn-primary text-xs px-3 py-1.5">
             <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i>
-            Tải lại
+            Reload
           </button>
         </div>
-        <div id="used-keys-loading" class="text-slate-400 text-sm">Đang tải...</div>
+        <div id="used-keys-loading" class="text-slate-400 text-sm">Loading...</div>
         <div id="used-keys-list" class="space-y-2 text-sm hidden"></div>
         <div id="used-keys-error" class="text-red-400 text-sm hidden"></div>
       </section>
 
-      <!-- Danh sách script đã upload -->
+      <!-- Uploaded scripts list -->
       <section class="card glass p-5">
         <h3 class="font-bold text-base mb-4 flex items-center gap-2">
           <i data-lucide="code-2" class="w-5 h-5 text-purple-400"></i>
-          Script đã upload
+          Uploaded Scripts
         </h3>
         <div id="scripts-list" class="space-y-2 text-sm"></div>
       </section>
@@ -249,9 +250,9 @@
     })();
 
     // ── Auth ──
-    let ADMIN_PASSWORD = ''; // Được gán khi login — không lộ khi F12
-    // Token này phải khớp với ADMIN_TOKEN trong list-keys.js
-    const ADMIN_TOKEN = 'moonlight-admin-secret-2026'; // ← Đổi giống list-keys.js
+    let ADMIN_PASSWORD = ''; // Assigned on login — not exposed in DevTools
+    // This token must match ADMIN_TOKEN in list-keys.js
+    const ADMIN_TOKEN = 'moonlight-admin-secret-2026'; // ← Change to match list-keys.js
 
     let isLoggedIn = false;
     let adminCaptchaPassed = false;
@@ -271,20 +272,20 @@
 
     async function doLogin() {
       if (!adminCaptchaPassed) {
-        document.getElementById('auth-err').textContent = '❌ Vui lòng xác minh reCAPTCHA trước!';
+        document.getElementById('auth-err').textContent = '❌ Please complete the reCAPTCHA first!';
         document.getElementById('auth-err').classList.remove('hidden');
         return;
       }
       const pw = document.getElementById('pw-input').value;
-      // Mật khẩu đúng: moonlightadmin (hash check phía client chỉ mang tính UX)
-      // So khớp bằng hash đơn giản — không lưu password plaintext hay base64
-      // Đổi mật khẩu: thay chuỗi hash bên dưới bằng kết quả sha256('mật_khẩu_mới')
+      // Correct password: moonlightadmin (client-side hash check is UX only)
+      // Compared using simple hash — password not stored as plaintext or base64
+      // Change password: replace the hash string below with sha256('new_password')
       // Tool: https://emn178.github.io/online-tools/sha256.html
       const pwHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw))
         .then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join(''));
-      // Hash của 'moonlightadmin':
+      // Hash of 'moonlightadmin':
       const CORRECT_HASH = '420fbe1e6eb1bc67c401cf9638d5781b48cfed3c38d7af20cd56a82df71ed8c9'; // SHA256('moonlightadmin')
-      ADMIN_PASSWORD = pw; // gán để dùng cho API calls
+      ADMIN_PASSWORD = pw; // assigned for use in API calls
       if (pwHash === CORRECT_HASH) {
         isLoggedIn = true;
         document.getElementById('auth-panel').classList.add('hidden');
@@ -293,10 +294,10 @@
         document.getElementById('pw-input').value = '';
         renderAll();
       } else {
-        document.getElementById('auth-err').textContent = '❌ Mật khẩu không đúng. Thử lại.';
+        document.getElementById('auth-err').textContent = '❌ Incorrect password. Try again.';
         document.getElementById('auth-err').classList.remove('hidden');
         document.getElementById('pw-input').value = '';
-        // Reset captcha sau khi nhập sai
+        // Reset captcha after wrong password
         if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         adminCaptchaPassed = false;
         document.getElementById('login-btn').disabled = true;
@@ -337,12 +338,12 @@
     }
 
     function formatDate(ts) {
-      return new Date(ts).toLocaleString('vi-VN');
+      return new Date(ts).toLocaleString('en-US');
     }
 
     function formatRemain(expireAt) {
       const left = Number(expireAt || 0) - Date.now();
-      return left > 0 ? formatMs(left) : 'Đã hết hạn';
+      return left > 0 ? formatMs(left) : 'Expired';
     }
 
     // ── Keys ──
@@ -351,23 +352,23 @@
       let keys = getKeys();
       const now = Date.now();
 
-      // Lọc ra key chưa hết hạn
+      // Filter out expired keys
       const alive = [];
       let active = 0, perm = 0;
       for (const k of keys) {
         if (k.ttl === 0) { perm++; active++; alive.push(k); continue; }
         const rem = k.createdAt + k.ttl * 1000 - now;
         if (rem > 0) { active++; alive.push(k); }
-        // Key hết hạn: không thêm vào alive (tự xóa)
+        // Expired keys: not added to alive (auto-removed)
       }
       saveKeys(alive);
 
       document.getElementById('stat-active').textContent = active;
       document.getElementById('stat-perm').textContent = perm;
-      document.getElementById('stat-time').textContent = new Date().toLocaleTimeString('vi-VN');
+      document.getElementById('stat-time').textContent = new Date().toLocaleTimeString('en-US');
 
       if (!alive.length) {
-        list.innerHTML = '<p class="text-slate-400 text-sm">Chưa có key nào.</p>';
+        list.innerHTML = '<p class="text-slate-400 text-sm">No keys yet.</p>';
         return;
       }
 
@@ -380,16 +381,16 @@
         const sourceLabel = {
           'server': '🌐 Server',
           'fallback': '💾 Offline',
-          'final-key': '✅ Đã dùng',
+          'final-key': '✅ Used',
           'user': '👤 Admin'
         }[item.source] || '—';
 
         row.innerHTML = `
           <span class="mono text-emerald-300 text-sm flex-1 break-all">${item.key}</span>
           <span class="text-xs text-slate-400">${sourceLabel}</span>
-          <span class="${isPerm ? 'tag tag-perm' : 'tag tag-active'}">${isPerm ? 'Vĩnh viễn' : formatMs(rem)}</span>
+          <span class="${isPerm ? 'tag tag-perm' : 'tag tag-active'}">${isPerm ? 'Permanent' : formatMs(rem)}</span>
           <span class="text-xs text-slate-500">${formatDate(item.createdAt)}</span>
-          <button class="del-key btn-danger" data-idx="${idx}">Xóa</button>
+          <button class="del-key btn-danger" data-idx="${idx}">Delete</button>
         `;
         list.appendChild(row);
       });
@@ -404,29 +405,29 @@
       });
     }
 
-    // ── Fetch key từ Netlify Blobs ──
+    // ── Fetch keys from Netlify Blobs ──
     async function fetchBlobsKeys() {
       const el = document.getElementById('blobs-keys-list');
       const countEl = document.getElementById('blobs-count');
       const todayEl = document.getElementById('today-key-display');
       if (!el) return;
 
-      el.innerHTML = '<p class="text-cyan-400 text-sm animate-pulse">⏳ Đang tải từ server...</p>';
+      el.innerHTML = '<p class="text-cyan-400 text-sm animate-pulse">⏳ Loading from server...</p>';
 
       try {
         const res = await fetch('/.netlify/functions/log-key', {
           headers: { 'x-admin-key': ADMIN_PASSWORD }
         });
-        if (res.status === 401) throw new Error('Sai mật khẩu admin');
+        if (res.status === 401) throw new Error('Wrong admin password');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 
-        if (todayEl) todayEl.textContent = data.todayKey || '(chưa tạo hôm nay)';
+        if (todayEl) todayEl.textContent = data.todayKey || '(not created today)';
         if (countEl) countEl.textContent = data.total || 0;
         document.getElementById('stat-active').textContent = (getKeys().filter(k => k.ttl === 0 || k.createdAt + k.ttl * 1000 > Date.now()).length) + (data.total || 0);
 
         if (!data.logs || !data.logs.length) {
-          el.innerHTML = '<p class="text-slate-400 text-sm">Chưa có user nào lấy key.</p>';
+          el.innerHTML = '<p class="text-slate-400 text-sm">No users have retrieved a key yet.</p>';
           return;
         }
 
@@ -436,13 +437,13 @@
           row.className = 'flex flex-col sm:flex-row sm:items-center gap-2 bg-cyan-950/40 border border-cyan-800/40 rounded-lg p-3';
           row.innerHTML = `
             <span class="mono text-cyan-300 text-sm flex-1 break-all">${item.key}</span>
-            <span class="tag" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">Còn ${formatRemain(item.expireAt)}</span>
-            <span class="text-xs text-slate-500">${item.usedAtStr || new Date(item.usedAt).toLocaleString('vi-VN')}</span>
+            <span class="tag" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">${formatRemain(item.expireAt)} left</span>
+            <span class="text-xs text-slate-500">${item.usedAtStr || new Date(item.usedAt).toLocaleString('en-US')}</span>
           `;
           el.appendChild(row);
         });
       } catch(err) {
-        el.innerHTML = `<p class="text-red-400 text-sm">❌ Lỗi: ${err.message}</p>`;
+        el.innerHTML = `<p class="text-red-400 text-sm">❌ Error: ${err.message}</p>`;
       }
     }
 
@@ -455,7 +456,7 @@
       saveKeys(keys);
       document.getElementById('new-key-input').value = '';
 
-      // Hiển thị key vừa tạo
+      // Display just-created key
       document.getElementById('created-key-text').textContent = key;
       document.getElementById('created-key-display').classList.remove('hidden');
       setTimeout(() => document.getElementById('created-key-display').classList.add('hidden'), 6000);
@@ -473,7 +474,7 @@
       const list = document.getElementById('scripts-list');
 
       if (!scripts.length) {
-        list.innerHTML = '<p class="text-slate-400 text-sm">Chưa có script nào.</p>';
+        list.innerHTML = '<p class="text-slate-400 text-sm">No scripts yet.</p>';
         return;
       }
 
@@ -494,7 +495,7 @@
           <span class="text-white font-semibold flex-1">${sc.name}</span>
           <span class="text-xs ${catColors[sc.category] || 'text-slate-400'} uppercase font-bold">${sc.category}</span>
           <span class="text-xs text-slate-400">${sc.uploadedAt}</span>
-          <button class="del-script btn-danger" data-idx="${idx}">Xóa</button>
+          <button class="del-script btn-danger" data-idx="${idx}">Delete</button>
         `;
         list.appendChild(row);
       });
@@ -512,7 +513,7 @@
     document.getElementById('upload-btn').addEventListener('click', () => {
       const name = document.getElementById('s-name').value.trim();
       const code = document.getElementById('s-code').value.trim();
-      if (!name || !code) { alert('Vui lòng nhập tên và code script!'); return; }
+      if (!name || !code) { alert('Please enter the script name and code!'); return; }
 
       const scripts = getScripts();
       scripts.push({
@@ -522,8 +523,8 @@
         code,
         desc: document.getElementById('s-desc').value.trim(),
         downloads: 0,
-        status: 'Hoạt động',
-        uploadedAt: new Date().toLocaleString('vi-VN'),
+        status: 'Active',
+        uploadedAt: new Date().toLocaleString('en-US'),
       });
       saveScripts(scripts);
 
@@ -532,14 +533,14 @@
       document.getElementById('s-desc').value = '';
 
       const msg = document.getElementById('upload-msg');
-      msg.textContent = '✓ Upload thành công!';
+      msg.textContent = '✓ Upload successful!';
       msg.classList.remove('hidden');
       setTimeout(() => msg.classList.add('hidden'), 3000);
 
       renderScripts();
     });
 
-    // ── Load used keys từ Netlify Blobs (log-key function) ──
+    // ── Load used keys from Netlify Blobs (log-key function) ──
     async function loadUsedKeys() {
       const loadingEl = document.getElementById('used-keys-loading');
       const listEl = document.getElementById('used-keys-list');
@@ -551,19 +552,19 @@
       if (errorEl) errorEl.classList.add('hidden');
 
       try {
-        // Dùng log-key GET với x-admin-key header
+        // Use log-key GET with x-admin-key header
         const res = await fetch('/.netlify/functions/log-key', {
           headers: { 'x-admin-key': ADMIN_PASSWORD }
         });
 
-        if (res.status === 401) throw new Error('Sai mật khẩu admin');
+        if (res.status === 401) throw new Error('Wrong admin password');
         if (!res.ok) throw new Error('HTTP ' + res.status);
 
         const data = await res.json();
         if (loadingEl) loadingEl.classList.add('hidden');
 
         if (!data.logs || data.logs.length === 0) {
-          if (listEl) { listEl.innerHTML = '<p class="text-slate-400 text-sm">Chưa có key nào được dùng.</p>'; listEl.classList.remove('hidden'); }
+          if (listEl) { listEl.innerHTML = '<p class="text-slate-400 text-sm">No keys have been used yet.</p>'; listEl.classList.remove('hidden'); }
           if (countEl) countEl.textContent = '0';
           return;
         }
@@ -573,7 +574,7 @@
           listEl.innerHTML = '';
           data.logs.forEach(log => {
             const sourceLabel = {
-              'final-key': '✅ Đã xác minh',
+              'final-key': '✅ Verified',
               'server': '🌐 Server',
               'fallback': '💾 Offline',
             }[log.source] || '—';
@@ -583,8 +584,8 @@
             row.innerHTML = `
               <span class="mono text-yellow-300 text-sm flex-1 break-all">${log.key}</span>
               <span class="text-xs text-cyan-400 font-semibold">${sourceLabel}</span>
-              <span class="tag tag-active">Còn ${formatRemain(log.expireAt)}</span>
-              <span class="text-xs text-slate-400">${log.usedAtStr || new Date(log.usedAt).toLocaleString('vi-VN')}</span>
+              <span class="tag tag-active">${formatRemain(log.expireAt)} left</span>
+              <span class="text-xs text-slate-400">${log.usedAtStr || new Date(log.usedAt).toLocaleString('en-US')}</span>
             `;
             listEl.appendChild(row);
           });
@@ -594,7 +595,7 @@
 
       } catch(err) {
         if (loadingEl) loadingEl.classList.add('hidden');
-        if (errorEl) { errorEl.textContent = '❌ Lỗi: ' + err.message; errorEl.classList.remove('hidden'); }
+        if (errorEl) { errorEl.textContent = '❌ Error: ' + err.message; errorEl.classList.remove('hidden'); }
       }
     }
 
@@ -608,9 +609,9 @@
       lucide.createIcons();
     }
 
-    // Auto refresh mỗi 30s
+    // Auto refresh every 30s
     setInterval(() => { if (isLoggedIn) { renderKeys(); renderScripts(); } }, 30000);
-    // Reload used keys từ Blobs mỗi 60s
+    // Reload used keys from Blobs every 60s
     setInterval(() => { if (isLoggedIn) loadUsedKeys(); }, 60000);
   </script>
 </body>

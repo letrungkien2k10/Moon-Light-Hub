@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="moonlight.png" />
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f0f1a; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 1rem; }
         .glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.14); border-radius: 1.5rem; padding: 2rem; max-width: 620px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,0.4); position: relative; z-index: 1; }
@@ -35,25 +36,25 @@
     <div class="stars" id="stars"></div>
 
     <div class="glass-card text-center">
-        <h1 class="text-4xl font-extrabold gradient-text mb-6">🔑 Key của Bạn</h1>
+        <h1 class="text-4xl font-extrabold gradient-text mb-6">🔑 Your Key</h1>
 
         <!-- Loading -->
         <div id="view-loading" class="mb-6">
             <div class="loader mx-auto mb-3"></div>
-            <p class="text-gray-300">Đang xác minh token...</p>
+            <p class="text-gray-300">Verifying token...</p>
         </div>
 
         <!-- Success -->
         <div id="view-success" class="hidden">
             <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-5 flex items-center justify-center gap-2">
                 <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
-                <span class="text-green-300 text-sm font-semibold">Token verified thành công!</span>
+                <span class="text-green-300 text-sm font-semibold">Token verified successfully!</span>
             </div>
 
             <div id="key-display" class="key-display mb-5"></div>
 
             <div class="countdown-box mb-5">
-                <p class="text-gray-400 text-sm mb-1">Thời gian còn lại:</p>
+                <p class="text-gray-400 text-sm mb-1">Time remaining:</p>
                 <span id="time-left" class="text-green-400 font-bold text-xl font-mono">24:00:00</span>
             </div>
 
@@ -64,7 +65,7 @@
                 </button>
                 <a href="/getkey.html" class="btn btn-indigo text-white no-underline">
                     <i data-lucide="home" class="w-5 h-5"></i>
-                    Trang chủ
+                    Home
                 </a>
             </div>
         </div>
@@ -73,38 +74,38 @@
         <div id="view-error" class="hidden">
             <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-5 flex items-center justify-center gap-2">
                 <i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>
-                <span id="error-msg" class="text-red-300 text-sm font-semibold">Lỗi xác minh token</span>
+                <span id="error-msg" class="text-red-300 text-sm font-semibold">Token verification error</span>
             </div>
 
             <div id="error-display" class="key-display error mb-5 text-base"></div>
 
             <a href="/getkey.html" class="btn btn-indigo text-white no-underline" style="display:inline-flex;width:auto;padding:0.75rem 2rem;">
                 <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                Quay lại lấy Key mới
+                Go back to get a new Key
             </a>
         </div>
 
         <p class="text-xs text-gray-600 mt-7">
-            ⚠️ Token chỉ dùng được một lần. Key có hiệu lực 24 giờ.
+            ⚠️ Token is single-use only. Key is valid for 24 hours.
         </p>
     </div>
 
     <script>
         lucide.createIcons();
 
-        // ── Dọn dẹp localStorage cũ khi mở trang ──
+        // ── Clean up old localStorage entries on page load ──
         (function cleanupOldKeys() {
             try {
-                // 1. Xóa fk_ cache nếu đã hết hạn
+                // 1. Clear fk_ cache if expired
                 const fkExp = parseInt(localStorage.getItem('fk_exp') || '0');
                 if (fkExp && Date.now() > fkExp) {
                     ['fk_token','fk_key','fk_exp','fk_logged'].forEach(k => localStorage.removeItem(k));
                 }
 
-                // 2. Xóa fallback_key_* cũ — nhưng chỉ sau khi loadKey() đã chạy xong
-                // (được gọi ở cuối trang, không xóa ở đây để tránh race condition)
+                // 2. Clear old fallback_key_* — but only after loadKey() has finished
+                // (called at end of page, not here to avoid race condition)
 
-                // 3. Xóa lv_ session cũ nếu hết hạn
+                // 3. Clear old lv_ session if expired
                 const lvExp = parseInt(localStorage.getItem('lv_token_expire') || '0');
                 if (lvExp && Date.now() > lvExp) {
                     ['lv_token','lv_token_expire','lv_verified','lv_start_time','visited_getkey'].forEach(k => localStorage.removeItem(k));
@@ -112,7 +113,7 @@
             } catch(e) {}
         })();
 
-        // Tạo sao nền
+        // Create background stars
         (function() {
             const c = document.getElementById('stars');
             for (let i = 0; i < 50; i++) {
@@ -140,7 +141,7 @@
             lucide.createIcons();
         }
 
-        // Gọi Netlify function để lưu key đã dùng vào Blobs
+        // Call Netlify function to log used key to Blobs
         async function logKeyToServer(key, expireAt) {
             try {
                 await fetch('/.netlify/functions/log-key', {
@@ -160,7 +161,7 @@
             document.getElementById('key-display').textContent = key;
             lucide.createIcons();
 
-            // Ghi log lên server — chỉ lần đầu, không ghi lại khi reload/mở lại
+            // Log to server — only once, not again on reload/reopen
             if (localStorage.getItem('fk_logged') !== key) {
                 logKeyToServer(key, expireAt);
                 localStorage.setItem('fk_logged', key);
@@ -169,11 +170,11 @@
             // Copy button
             document.getElementById('copy-key-btn').onclick = () => {
                 navigator.clipboard.writeText(key)
-                    .then(() => showToast('✓ Đã sao chép key!'))
-                    .catch(() => showToast('Copy thất bại', 'error'));
+                    .then(() => showToast('✓ Key copied!'))
+                    .catch(() => showToast('Copy failed', 'error'));
             };
 
-            // Countdown dùng expireAt từ server (chính xác), fallback 24h
+            // Countdown uses expireAt from server (accurate), fallback 24h
             startCountdown(expireAt || (Date.now() + 24 * 60 * 60 * 1000));
         }
 
@@ -185,15 +186,15 @@
                     el.textContent = '00:00:00';
                     el.classList.remove('text-green-400');
                     el.classList.add('text-red-400');
-                    document.getElementById('key-display').textContent = '⏰ Key đã hết hạn!';
+                    document.getElementById('key-display').textContent = '⏰ Key has expired!';
                     document.getElementById('key-display').classList.add('error');
                     document.getElementById('copy-key-btn').disabled = true;
-                    showToast('Key đã hết hạn — đang chuyển trang...', 'error');
+                    showToast('Key expired — redirecting...', 'error');
 
-                    // Xóa localStorage cache khi hết hạn
+                    // Clear localStorage cache on expiry
                     clearCache();
 
-                    // Redirect về getkey sau 3 giây
+                    // Redirect to getkey after 3 seconds
                     setTimeout(() => {
                         window.location.href = '/getkey.html';
                     }, 3000);
@@ -203,7 +204,7 @@
                 const m = Math.floor((left % 3600000) / 60000);
                 const s = Math.floor((left % 60000) / 1000);
                 el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                // Đổi màu khi còn ít thời gian
+                // Change color when time is running low
                 if (left < 3600000) { el.classList.remove('text-green-400'); el.classList.add('text-yellow-400'); }
                 if (left < 600000)  { el.classList.remove('text-yellow-400'); el.classList.add('text-red-400'); }
                 setTimeout(tick, 1000);
@@ -211,7 +212,7 @@
             tick();
         }
 
-        // ── Cache helpers — dùng localStorage để tắt tab mở lại vẫn còn ──
+        // ── Cache helpers — uses localStorage so reopening tab still shows key ──
         function saveCache(token, key, expireAt) {
             try {
                 localStorage.setItem('fk_token', token);
@@ -225,11 +226,11 @@
                 const savedToken = localStorage.getItem('fk_token');
                 const key = localStorage.getItem('fk_key');
                 const exp = parseInt(localStorage.getItem('fk_exp') || '0');
-                // Token phải khớp và chưa hết hạn
+                // Token must match and not be expired
                 if (savedToken === token && key && Date.now() < exp) {
                     return { key, expireAt: exp };
                 }
-                // Hết hạn hoặc token khác → xóa
+                // Expired or different token → clear
                 if (savedToken === token) clearCache();
             } catch(e) {}
             return null;
@@ -242,17 +243,17 @@
             localStorage.removeItem('fk_logged');
         }
 
-        // ── Main: lấy key từ token ──
+        // ── Main: retrieve key from token ──
         async function loadKey() {
             const params = new URLSearchParams(window.location.search);
             const token = params.get('token');
 
             if (!token) {
-                showError('Link không hợp lệ', '❌ Thiếu token trong URL');
+                showError('Invalid link', '❌ Missing token in URL');
                 return;
             }
 
-            // 1. Kiểm tra localStorage cache — tắt tab mở lại vẫn hiện key
+            // 1. Check localStorage cache — reopening tab still shows key
             const cached = loadCache(token);
             if (cached) {
                 showSuccess(cached.key, cached.expireAt);
@@ -264,7 +265,7 @@
                 const res = await fetch(`/.netlify/functions/validate-key?token=${encodeURIComponent(token)}`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (!data.valid) throw new Error(data.message || 'Token không hợp lệ hoặc đã hết hạn');
+                if (!data.valid) throw new Error(data.message || 'Token is invalid or has expired');
 
                 const expireAt = data.expireAt || (Date.now() + 24 * 60 * 60 * 1000);
                 saveCache(token, data.key, expireAt);
@@ -283,12 +284,12 @@
                 return;
             }
 
-            // 4. Thất bại hoàn toàn
-            showError('Token không hợp lệ, đã sử dụng, hoặc hết hạn', '❌ Vui lòng quay lại trang đầu để lấy key mới.');
+            // 4. Complete failure
+            showError('Token is invalid, already used, or expired', '❌ Please go back to the start page to get a new key.');
         }
 
         loadKey().finally(() => {
-            // Dọn fallback_key_* sau khi loadKey đã xử lý xong
+            // Clean up fallback_key_* after loadKey has finished processing
             try {
                 const toDelete = [];
                 for (let i = 0; i < localStorage.length; i++) {

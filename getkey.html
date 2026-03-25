@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Key 24h - Moon Light Hub</title>
+    <link rel="icon" type="image/png" href="moonlight.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -35,14 +36,14 @@
         </div>
 
         <h1 class="text-4xl font-extrabold gradient-text mb-4">Moon Light Hub</h1>
-        <p class="text-lg text-gray-300 mb-3">Lấy Key miễn phí 24 giờ</p>
+        <p class="text-lg text-gray-300 mb-3">Get your free 24-hour Key</p>
 
         <div class="info-box text-left text-sm text-gray-300 mb-6">
-            <p class="font-semibold text-indigo-300 mb-2">📋 Hướng dẫn:</p>
+            <p class="font-semibold text-indigo-300 mb-2">📋 Instructions:</p>
             <ol class="list-decimal list-inside space-y-1 text-gray-400">
-                <li>Bấm nút bên dưới để vào trang Linkvertise</li>
-                <li>Hoàn thành các bước trên Linkvertise</li>
-                <li>Bạn sẽ tự động được chuyển về để lấy key</li>
+                <li>Click the button below to visit Linkvertise</li>
+                <li>Complete the steps on Linkvertise</li>
+                <li>You will be automatically redirected back to get your key</li>
             </ol>
         </div>
 
@@ -58,15 +59,15 @@
 
         <button id="start-btn" class="btn-main" disabled>
             <i data-lucide="external-link" class="w-6 h-6"></i>
-            Bắt đầu lấy Key
+            Start Getting Key
         </button>
 
-        <!-- Linkvertise SDK container (ẩn, tự inject UI) -->
+        <!-- Linkvertise SDK container (hidden, auto-injects UI) -->
         <div id="lv-container" class="hidden mt-4"></div>
 
         <p class="text-xs text-gray-500 mt-6">
-            ✅ Bạn có thể tắt tab này sau khi bấm nút — session được lưu 24 giờ.<br>
-            Sau khi hoàn thành Linkvertise, bạn sẽ tự động được chuyển về để lấy key.
+            ✅ You can close this tab after clicking — your session is saved for 24 hours.<br>
+            After completing Linkvertise, you will be automatically redirected back to receive your key.
         </p>
     </div>
 
@@ -86,7 +87,7 @@
             document.getElementById('start-btn').disabled = true;
         }
 
-        // Tạo sao nền
+        // Create background stars
         (function createStars() {
             const container = document.getElementById('stars');
             for (let i = 0; i < 60; i++) {
@@ -101,13 +102,13 @@
         })();
 
         document.getElementById('start-btn').addEventListener('click', () => {
-            // Kiểm tra reCAPTCHA
+            // Check reCAPTCHA
             if (!captchaPassed) {
-                alert('Vui lòng xác minh reCAPTCHA trước!');
+                alert('Please complete the reCAPTCHA first!');
                 return;
             }
 
-            // Tạo và lưu session token
+            // Create and store session token
             const token = (crypto.randomUUID ? crypto.randomUUID() : Array(32).fill(0).map(() => Math.random().toString(36)[2]).join(''));
 
             localStorage.removeItem('lv_token');
@@ -119,9 +120,9 @@
             localStorage.setItem('visited_getkey', 'true');
             localStorage.setItem('lv_start_time', Date.now().toString());
 
-            // Flow 2 bước — token unique mỗi lần để tránh share link:
-            // Bước 1 (NlOwtA5wZO11) → Bước 2 (EbAEdp0Kh1IM) → getkey2.html?token=xxx
-            // Mỗi lần bấm nút sinh ra token mới → link getkey2 khác nhau mỗi lần
+            // 2-step flow — unique token each time to prevent link sharing:
+            // Step 1 (NlOwtA5wZO11) → Step 2 (EbAEdp0Kh1IM) → getkey2.html?token=xxx
+            // Each button press generates a new token → different getkey2 link each time
 
             const finalUrl = `${window.location.origin}/getkey2.html?token=${encodeURIComponent(token)}`;
             const link2Url = `https://direct-link.net/4462018/EbAEdp0Kh1IM?redirect=${encodeURIComponent(finalUrl)}`;
